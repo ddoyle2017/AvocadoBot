@@ -1,6 +1,7 @@
 AvocadoBot
 ======
-![]({{site.baseurl}}/https://i.pinimg.com/originals/77/f9/7b/77f97b0f7fdc0548bc3d55e6bee23424.jpg)
+![][logo]
+[logo]: https://github.com/ddoyle2017/AvocadoBot/blob/master/avocado.png
 
 What is it?
 ------

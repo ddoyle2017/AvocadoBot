@@ -2,6 +2,10 @@
 
 <div align="center">
 	<img src="https://github.com/ddoyle2017/AvocadoBot/blob/master/avocado.png"/>
+	<p>
+      <em>Credits: <a href="https://www.pinterest.com/pin/143200463135381917/">Edited</a> by <a href="https://github.com/ddoyle2017">@ddoyle2016</a> 
+      </em>
+    </p>
 </div>
 
 

@@ -1,6 +1,6 @@
 AvocadoBot
 ======
-General purpose Discord Bot written in Java 8. Will feature music playing feature via YouTube and SoundCloud, as well as a online image downloading functionality.
+General purpose Discord Bot written in Java 8. Will feature music playing feature via YouTube and SoundCloud, as well as an online image downloading functionality.
 
 Authors
 ------

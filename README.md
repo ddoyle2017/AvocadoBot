@@ -1,7 +1,6 @@
 AvocadoBot
 ======
-![][logo]
-[logo]: https://github.com/ddoyle2017/AvocadoBot/blob/master/avocado.png
+![](https://github.com/ddoyle2017/AvocadoBot/blob/master/avocado.png)
 
 What is it?
 ------

@@ -1,6 +1,8 @@
+<p align="center">
 AvocadoBot
 ======
 ![](https://github.com/ddoyle2017/AvocadoBot/blob/master/avocado.png)
+</p>
 
 What is it?
 ------

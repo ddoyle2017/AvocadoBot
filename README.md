@@ -11,7 +11,7 @@
 
 ## What is it?
 
-General purpose Discord Bot written in Java 8. Will feature music playing feature via YouTube and SoundCloud, as well as an online image downloading functionality. Hosted on a free tier Amazon EC2 instance.
+Clean, general purpose Discord Bot written in Java 8. Will feature music playing feature via YouTube and SoundCloud, as well as an online image downloading functionality. Hosted on a free tier Amazon EC2 instance.
 
 ## Authors
 

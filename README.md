@@ -13,11 +13,14 @@
 
 Clean, general purpose Discord Bot written in Java 8. Will feature music playing feature via YouTube and SoundCloud, as well as an online image downloading functionality. Hosted on a free tier Amazon EC2 instance.
 
+Discord is a popular chat & VOIP service for gamers: https://discordapp.com
+
 ## Authors
 
 * **Daniel Doyle** - [@ddoyle2017](https://github.com/ddoyle2017)
 * **Dieu Do** - [@ddo94](https://github.com/ddo94) 
 
 ## Built With
-[JDA](https://github.com/DV8FromTheWorld/JDA)
-Java wrapper for the popular chat & VOIP service: Discord https://discordapp.com
+### [JDA (Java Discord API)](https://github.com/DV8FromTheWorld/JDA)
+
+A clean and full wrapping of the Discord REST API and its Websocket-Events for Java.

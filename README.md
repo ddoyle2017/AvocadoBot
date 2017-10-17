@@ -15,9 +15,9 @@ Clean, general purpose Discord Bot written in Java 8. Will feature music playing
 
 ## Authors
 
-* **Daniel Doyle** - *TBD* - [@ddoyle2017](https://github.com/ddoyle2017)
-* **Dieu Do** - *TBD* - [@ddo94](https://github.com/ddo94) 
+* **Daniel Doyle** - [@ddoyle2017](https://github.com/ddoyle2017)
+* **Dieu Do** - [@ddo94](https://github.com/ddo94) 
 
 ## Built With
-
-* TBD
+[JDA](https://github.com/DV8FromTheWorld/JDA)
+Java wrapper for the popular chat & VOIP service: Discord https://discordapp.com

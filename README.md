@@ -23,4 +23,4 @@ Discord is a popular chat & VOIP service for gamers: https://discordapp.com
 ## Built With
 ### [JDA (Java Discord API)](https://github.com/DV8FromTheWorld/JDA)
 
-A clean and full wrapping of the Discord REST API and its Websocket-Events for Java.
+A clean and full wrapping of the Discord RESTful API and its Websocket-Events for Java.

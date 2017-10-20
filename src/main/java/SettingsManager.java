@@ -49,6 +49,7 @@ public class SettingsManager
     public void loadSettings() {
         BufferedReader fileInput = null;
 
+
         try {
             fileInput = Files.newBufferedReader(authFile, StandardCharsets.UTF_8);
             this.settings = gson.fromJson(fileInput, Settings.class);

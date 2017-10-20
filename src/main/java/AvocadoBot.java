@@ -20,8 +20,10 @@ public class AvocadoBot extends ListenerAdapter
 
     public static void main (String[] args) throws LoginException, RateLimitedException
     {
+        Settings settings = SettingsManager.getInstance().getSettings();
+
         api = new JDABuilder(AccountType.BOT)
-                .setToken("REDACTED")
+                .setToken(settings.getBotToken())
                 .buildAsync();
 
         api.addEventListener(new Listener()); // link an instance of the Listener class to the bot

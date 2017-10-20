@@ -23,15 +23,8 @@ public class Listener extends ListenerAdapter
         String content  = message.getRawContent();  // getRawContent is an atomic getter that keeps discord formatting
         String[] tokens = content.split("\\s");
 
-<<<<<<< HEAD
-<<<<<<< HEAD
         // handle the command
         if (tokens[0].equals("!avocado")||tokens[0].equals("!a"))
-=======
-=======
->>>>>>> 4b70d0a52ca15df40dbf2102f8ac9b6449a79b44
-        if (content.equals("!avocado"))
->>>>>>> master
         {
             MessageChannel channel = event.getChannel(); // get which channel the message came from
             channel.sendMessage("HUGE ASSES").queue(); // add message response to the bot's action queue

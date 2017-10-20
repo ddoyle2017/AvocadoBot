@@ -10,5 +10,5 @@
 /.gradle/
 
 # AvocadoBot #
-config.json
+auth.json
 

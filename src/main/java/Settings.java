@@ -6,7 +6,7 @@
  *
  *
  * This code is based on Smbarbour's RavenBot, which can be found at:
- * https://github.com/MCUpdater/RavenBot/blob/master/src/main/java/org/mcupdater/ravenbot/SettingsManager.java
+ * https://github.com/MCUpdater/RavenBot/blob/master/src/main/java/org/mcupdater/ravenbot/Settings.java
  */
 
 public class Settings

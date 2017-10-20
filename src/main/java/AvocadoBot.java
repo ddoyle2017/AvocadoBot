@@ -12,21 +12,40 @@ import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import javax.security.auth.login.LoginException;
+import java.io.UnsupportedEncodingException;
 
 
 public class AvocadoBot extends ListenerAdapter
 {
     private static JDA api;
 
-    public static void main (String[] args) throws LoginException, RateLimitedException
+    public static void main (String[] args) throws InterruptedException, UnsupportedEncodingException
     {
-        Settings settings = SettingsManager.getInstance().getSettings();
+       // if (!System.getProperty("file.encoding").equals("UTF-8")) return;
 
-        api = new JDABuilder(AccountType.BOT)
-                .setToken(settings.getBotToken())
-                .buildAsync();
+        setUpBot();
+    }
 
-        api.addEventListener(new Listener()); // link an instance of the Listener class to the bot
+    private static void setUpBot()
+    {
+        try
+        {
+            Settings settings = SettingsManager.getInstance().getSettings();
+
+            api = new JDABuilder(AccountType.BOT)
+                    .setToken(settings.getBotToken())
+                    .buildAsync();
+
+            api.addEventListener(new Listener());
+        }
+        catch (LoginException e) // problems with the bot account logging into Discord.
+        {
+            e.printStackTrace();
+        }
+        catch (RateLimitedException e) // too many user HTTP requests in a given time frame
+        {
+            e.printStackTrace();
+        }
     }
 
     public static JDA getAPI ()

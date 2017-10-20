@@ -1,0 +1,14 @@
+# Files to be ignored #
+#######################
+
+# IntelliJ #
+/.idea/
+*.iml
+
+# Gradle #
+/build/
+/.gradle/
+
+# AvocadoBot #
+config.json
+

@@ -21,7 +21,7 @@ public class AvocadoBot extends ListenerAdapter
 
     public static void main (String[] args) throws InterruptedException, UnsupportedEncodingException
     {
-        if (!System.getProperty("file.encoding").equals("UTF-8")) return;
+       // if (!System.getProperty("file.encoding").equals("UTF-8")) return;
 
         setUpBot();
     }

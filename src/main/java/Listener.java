@@ -24,9 +24,12 @@ public class Listener extends ListenerAdapter
         String[] tokens = content.split("\\s");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         // handle the command
         if (tokens[0].equals("!avocado")||tokens[0].equals("!a"))
 =======
+=======
+>>>>>>> 4b70d0a52ca15df40dbf2102f8ac9b6449a79b44
         if (content.equals("!avocado"))
 >>>>>>> master
         {

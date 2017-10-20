@@ -43,7 +43,7 @@ public class Listener extends ListenerAdapter
             }
 
             catch(IndexOutOfBoundsException e) {
-                channel.sendMessage("Avocado needs your commands to grow <3\n").queue(); // sends error message if there is no commands added
+                channel.sendMessage("Avocado needs your commands to grow <3").queue(); // sends error message if there is no commands added
             }//end catch
         }//end if
     }//end onMessageReceived

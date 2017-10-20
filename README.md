@@ -24,3 +24,7 @@ Discord is a popular chat & VOIP service for gamers: https://discordapp.com
 ### [JDA (Java Discord API)](https://github.com/DV8FromTheWorld/JDA)
 
 A clean and full wrapping of the Discord RESTful API and its Websocket-Events for Java.
+
+### [LavaPlayer](https://github.com/sedmelluq/LavaPlayer#lavaplayer---audio-player-library-for-discord)
+
+An audio player library for Java that loads tracks and converts them into a stream of Opus frames.

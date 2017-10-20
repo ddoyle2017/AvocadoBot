@@ -3,6 +3,8 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
+import java.util.StringTokenizer;
+
 /**
  * Listener Class
  *
@@ -23,12 +25,30 @@ public class Listener extends ListenerAdapter
         // object that was created from the JSON file (the event class)
         Message message = event.getMessage();
         String content  = message.getRawContent();  // getRawContent is an atomic getter that keeps discord formatting
+        String[] tokens = content.split("\\s");
 
         // handle the command
-        if (content.equals("!avocado"))
+        if (tokens[0].equals("!avocado")||tokens[0].equals("!a"))
         {
             MessageChannel channel = event.getChannel(); // get which channel the message came from
             channel.sendMessage("HUGE ASSES").queue(); // add message response to the bot's action queue
-        }
-    }
-}
+
+            try {
+                switch (tokens[1]) {
+                    case "play":
+                        channel.sendMessage("OPPAIIII~ ~ ~ ~ ~").queue(); // add message response to the bot's action queue
+                        break;
+                    case "hook":
+                        channel.sendMessage("FRIED CHICKEN").queue(); // add message response to the bot's action queue
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            catch(IndexOutOfBoundsException e) {
+                channel.sendMessage("Avocado needs your commands to grow <3\n").queue(); // sends error message if there is no commands added
+            }//end catch
+        }//end if
+    }//end onMessageReceived
+}//end class

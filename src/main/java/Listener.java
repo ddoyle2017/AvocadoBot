@@ -6,8 +6,8 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 /**
  * Listener Class
  *
- * All event listeners go here. This class handles any messages received via Discord
- *
+ * All event listeners go here. This class grabs any messages received via Discord, parses the strings, then
+ * handles the commands.
  *
  */
 public class Listener extends ListenerAdapter

@@ -18,6 +18,7 @@ public class SettingsManager
         if (instance == null) {
             instance = new SettingsManager();
         }
+        return instance;
     }
 
     public SettingsManager() {

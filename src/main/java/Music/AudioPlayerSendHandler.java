@@ -1,4 +1,6 @@
 package Music;
 
-public class AudioPlayerSendHandler {
+public class AudioPlayerSendHandler
+{
+
 }

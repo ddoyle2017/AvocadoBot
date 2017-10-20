@@ -1,4 +1,6 @@
 package Music;
 
-public class TrackScheduler {
+public class TrackScheduler
+{
+
 }

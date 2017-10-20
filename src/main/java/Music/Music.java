@@ -1,4 +1,6 @@
 package Music;
 
-public class Music {
+public class Music
+{
+
 }

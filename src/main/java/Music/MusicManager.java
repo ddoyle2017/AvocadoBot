@@ -1,5 +1,6 @@
 package Music;
 
-public class MusicManager {
+public class MusicManager
+{
 
 }

@@ -8,27 +8,27 @@
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import javax.security.auth.login.LoginException;
 
 
-public class Main extends ListenerAdapter
+public class AvocadoBot extends ListenerAdapter
 {
+    private static JDA api;
+
     public static void main (String[] args) throws LoginException, RateLimitedException
     {
-        JDA API = new JDABuilder(AccountType.BOT)
-                .setToken("MzY5NzI2NzUwMTM5MDg4ODk3.DMculg.pJQSj_5-0LJS6-6Wu137qFNaK9c")
+        api = new JDABuilder(AccountType.BOT)
+                .setToken("REDACTED")
                 .buildAsync();
 
+        api.addEventListener(new Listener()); // link an instance of the Listener class to the bot
     }
 
-    //  Event listener
-    @Override
-    public void onMessageReceived (MessageReceivedEvent event)
+    public static JDA getAPI ()
     {
-        System.out.println("I received a message in my butt");
+        return api;
     }
 }

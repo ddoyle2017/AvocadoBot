@@ -1,13 +1,13 @@
 plugins {
     id'java'
     id'application'
-    id'com.github.johnrengelman.shadow' version '1.2.4'
+    id'com.github.johnrengelman.shadow' version '2.0.1'
 }
 
 mainClassName = 'AvocadoBot'
 
 version '1.0'
-def jdaVersion = '3.3.1_291'
+def jdaVersion = '3.4.0_318'
 
 sourceCompatibility = 1.8
 

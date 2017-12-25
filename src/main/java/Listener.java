@@ -14,37 +14,48 @@ import java.util.StringTokenizer;
  */
 public class Listener extends ListenerAdapter
 {
+
     @Override
-    public void onMessageReceived (MessageReceivedEvent event)
+    public void onMessageReceived(MessageReceivedEvent event)
     {
-        if (event.getAuthor().isBot()) return;        //  is from a bot. If so, return nothing.
+        // block other bots from giving AvocadoBot commands
+        if (event.getAuthor().isBot()) return;
 
         Message message = event.getMessage();
-        String content  = message.getRawContent();  // getRawContent is an atomic getter that keeps discord formatting
+        String content = message.getRawContent();  // getRawContent is an atomic getter that keeps discord formatting
         String[] tokens = content.split("\\s");
 
-        // handle the command
-        if (tokens[0].equals("!avocado")||tokens[0].equals("!a"))
+        if (tokens[0].equals("!avocado") || tokens[0].equals("!a"))
         {
-            MessageChannel channel = event.getChannel(); // get which channel the message came from
-            channel.sendMessage("HUGE ASSES").queue(); // add message response to the bot's action queue
+            MessageChannel channel = event.getChannel();
+            channel.sendMessage("Hi, I joined this channel").queue();
 
             try {
-                switch (tokens[1]) {
+                switch (tokens[1])
+                {
                     case "play":
-                        channel.sendMessage("OPPAIIII~ ~ ~ ~ ~").queue(); // add message response to the bot's action queue
+                        if (tokens[2] != null)
+                        {
+                            channel.sendMessage("Playing " + tokens[2]).queue();
+                        }
+                        else
+                        {
+                            channel.sendMessage("I need a song name or YouTube link!").queue();
+                        }
                         break;
                     case "hook":
-                        channel.sendMessage("FRIED CHICKEN").queue(); // add message response to the bot's action queue
+                        channel.sendMessage("Not implemented yet").queue();
                         break;
+                    case "help":
+                        channel.sendMessage("Command list:\n play [NAME | URL] - plays a song\n").queue();
                     default:
                         break;
                 }
             }
-
-            catch(IndexOutOfBoundsException e) {
-                channel.sendMessage("Avocado needs your commands to grow <3").queue(); // sends error message if there is no commands added
-            }//end catch
-        }//end if
-    }//end onMessageReceived
-}//end class
+            catch (IndexOutOfBoundsException e)
+            {
+                channel.sendMessage("I need a command, type '!a help' for a list of commands").queue();
+            }
+        }
+    }
+}

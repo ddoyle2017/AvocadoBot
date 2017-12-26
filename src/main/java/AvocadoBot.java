@@ -5,9 +5,17 @@ import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import javax.security.auth.login.LoginException;
-import java.io.UnsupportedEncodingException;
 
-
+/**
+ * AvocadoBot Class
+ *
+ *  - This is where the initialization of the bot takes place. We create an instance of the SettingsManager class, get
+ *    the Discord Bot authentication information, then logs into Discord's servers.
+ *
+ *  - Afterwards, we attach a Listener object to the bot so that it can listen to text channels in the server
+ *    for commands
+ *
+ */
 public class AvocadoBot extends ListenerAdapter
 {
     private static JDA api;

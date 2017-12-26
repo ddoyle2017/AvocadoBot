@@ -26,6 +26,7 @@ public class SettingsManager
     private Settings    settings;
     private final Path  authFile = new File(".").toPath().resolve("auth.json");
 
+
     // If a SettingsManager object exists, return it. If not, create one.
     public static SettingsManager getInstance()
     {
@@ -53,7 +54,7 @@ public class SettingsManager
     // appropriate Settings object variables
     private void loadSettings()
     {
-        BufferedReader fileInput = null;
+        BufferedReader fileInput;
 
         try
         {
@@ -67,7 +68,8 @@ public class SettingsManager
         }
     }
 
-    public Settings getSettings() {
+    public Settings getSettings()
+    {
         return settings;
     }
 }

@@ -29,7 +29,7 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
     @Override
     public void loadFailed(FriendlyException ex)
     {
-
+        channel.sendMessage(":x: **Could not play: " + ex.getMessage() + "**").queue();
     }
 
     @Override

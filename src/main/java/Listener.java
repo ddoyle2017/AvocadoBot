@@ -1,15 +1,8 @@
-import Music.AudioPlayerSendHandler;
 import Music.MusicLoadResultHandler;
 import Music.MusicManager;
-import Music.TrackScheduler;
-import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
-import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
-import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.audio.hooks.ConnectionStatus;
 import net.dv8tion.jda.core.entities.*;
@@ -26,8 +19,9 @@ import net.dv8tion.jda.core.managers.AudioManager;
  */
 public class Listener extends ListenerAdapter
 {
-    private AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
-    private MusicManager       musicManager  = new MusicManager(playerManager);
+    private AudioPlayerManager playerManager  = new DefaultAudioPlayerManager();
+    private MusicManager       musicManager   = new MusicManager(playerManager);
+    private boolean            isMusicPlaying = false;
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event)
@@ -35,10 +29,10 @@ public class Listener extends ListenerAdapter
         if (event.getAuthor().isBot()) return;                          // block other bots from giving AvocadoBot commands
         if (!event.getMessage().isFromType(ChannelType.TEXT)) return;   // we only accept messages from a text channel (no DMs)
 
-        Message             message = event.getMessage();
-        String              content = message.getContentDisplay();
-        MessageChannel      channel = event.getChannel();
-        AudioManager        manager = event.getGuild().getAudioManager();
+        Message         message = event.getMessage();
+        String          content = message.getContentDisplay();
+        MessageChannel  channel = event.getChannel();
+        AudioManager    manager = event.getGuild().getAudioManager();
 
         manager.setSendingHandler(musicManager.getSendHandler());
         AudioSourceManagers.registerRemoteSources(playerManager);
@@ -48,16 +42,60 @@ public class Listener extends ListenerAdapter
         {
             channel.sendMessage(":x: **I need a command!**").queue();
         }
-        else if (content.equals("!avocado help") || content.equals("!a help") || content.equals("!avocado commands") || content.equals("!a commands"))
+        else if (content.equals("!avocado play") || content.equals("!a play"))
         {
-            channel.sendMessage(":white_check_mark: **Here is the command list**").queue();
-            channel.sendMessage(getCommandList()).queue();
+            if (!isMusicPlaying)
+            {
+                channel.sendMessage(":x: **Missing a song or URL.**").queue();
+            }
+            else if (musicManager.getPlayer().isPaused())
+            {
+                channel.sendMessage("**Resuming** :play_pause:").queue();
+                musicManager.getPlayer().setPaused(false);
+            }
+            else if (!musicManager.getPlayer().isPaused())
+            {
+                channel.sendMessage(":x: **Player is not paused.**").queue();
+            }
         }
         else if (content.startsWith("!avocado play") || content.startsWith("!a play"))
         {
             String trackUrl = content.substring(content.lastIndexOf("play")+5, content.length()).trim();
             joinVoiceChannel(event, channel);
             playerManager.loadItemOrdered(musicManager, trackUrl, new MusicLoadResultHandler(musicManager, channel));
+            isMusicPlaying = true;
+        }
+        else if (content.equals("!avocado pause") || content.equals("!a pause") || content.equals("!avocado stop") || content.equals("!a stop"))
+        {
+            if (musicManager.getPlayer().isPaused())
+            {
+                channel.sendMessage(":x: **Player is already paused.**").queue();
+            }
+            else if (manager.getConnectionStatus() != ConnectionStatus.CONNECTED)
+            {
+                channel.sendMessage(":x: **You have to be in a voice channel to use this command.**").queue();
+            }
+            else
+            {
+                channel.sendMessage("**Paused** :pause_button:").queue();
+                musicManager.getPlayer().setPaused(true);
+            }
+        }
+        else if (content.equals("!avocado resume") || content.equals("!a resume"))
+        {
+            if (musicManager.getPlayer().isPaused())
+            {
+                channel.sendMessage("**Resuming** :play_pause:").queue();
+                musicManager.getPlayer().setPaused(false);
+            }
+            else if (manager.getConnectionStatus() != ConnectionStatus.CONNECTED)
+            {
+                channel.sendMessage(":x: **You have to be in a voice channel to use this command.**").queue();
+            }
+            else
+            {
+                channel.sendMessage(":x: **Player is not paused.**").queue();
+            }
         }
         else if (content.equals("!avocado join") || content.equals("!a join"))
         {
@@ -67,6 +105,11 @@ public class Listener extends ListenerAdapter
         {
             leaveVoiceChannel(event, channel);
         }
+        else if (content.equals("!avocado help") || content.equals("!a help") || content.equals("!avocado commands") || content.equals("!a commands"))
+        {
+            channel.sendMessage(":white_check_mark: **Here is the command list**").queue();
+            channel.sendMessage(getCommandList()).queue();
+        }
     }
 
     private MessageEmbed getCommandList()
@@ -74,10 +117,12 @@ public class Listener extends ListenerAdapter
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setColor(java.awt.Color.GREEN);
         embedBuilder.addField("!a play [URL | Query]", "Give AvocadoBot a song or YouTube link to play.\n", false);
+        embedBuilder.addField("!a pause", "Pauses current song\n", false);
+        embedBuilder.addField("!a resume", "Continues playing a paused song\n", false);
         embedBuilder.addField("!a join", "AvocadoBot will join your voice channel.\n", false);
         embedBuilder.addField("!a leave", "Disconnects AvocadoBot from your voice channel.\n", false);
-        embedBuilder.addField("!a help", "Provides a list of commands.\n", false);
-        embedBuilder.addField("!a hook [URL]", "Creates a webhook for updates from the given link.", false);
+        embedBuilder.addField("!a hook [URL]", "Creates a webhook for updates from the given link.\n", false);
+        embedBuilder.addField("!a help", "Provides a list of commands.", false);
         return embedBuilder.build();
     }
 

@@ -3,8 +3,12 @@ package Music;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
-import javafx.scene.media.AudioTrack;
+
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
 
 /**
  *  TrackScheduler Class
@@ -15,6 +19,25 @@ import javafx.scene.media.AudioTrack;
  */
 public class TrackScheduler extends AudioEventAdapter
 {
+    private final AudioPlayer player;
+    private final BlockingQueue<AudioTrack> queue;
+
+
+    public TrackScheduler(AudioPlayer audioPlayer)
+    {
+        this.player = audioPlayer;
+        this.queue  = new LinkedBlockingQueue<>();
+    }
+
+    public void queue (AudioTrack track)
+    {
+        if (player.startTrack(track, true))
+        {
+            queue.offer(track);
+        }
+    }
+
+
     @Override
     public void onPlayerPause(AudioPlayer player)
     {
@@ -27,11 +50,13 @@ public class TrackScheduler extends AudioEventAdapter
 
     }
 
+    @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track)
     {
 
     }
 
+    @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason)
     {
         if (endReason.mayStartNext)
@@ -40,11 +65,13 @@ public class TrackScheduler extends AudioEventAdapter
         }
     }
 
+    @Override
     public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException ex)
     {
 
     }
 
+    @Override
     public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs)
     {
 

@@ -7,33 +7,24 @@ import net.dv8tion.jda.core.audio.AudioSendHandler;
 
 public class AudioPlayerSendHandler implements AudioSendHandler
 {
-    //private final AudioPlayer audioPlayer;
+    private final AudioPlayer audioPlayer;
     private AudioFrame lastFrame;
 
-    public AudioPlayerSendHandler()
+    public AudioPlayerSendHandler(AudioPlayer player)
     {
-        //this.audioPlayer = audioPlayer;
+        this.audioPlayer = player;
     }
 
     @Override
     public boolean canProvide()
     {
-        if (lastFrame == null)
-        {
-            //lastFrame = audioPlayer.provide();
-        }
-
-        return lastFrame != null;
+        lastFrame = audioPlayer.provide();
+        return (lastFrame != null);
     }
 
     @Override
     public byte[] provide20MsAudio()
     {
-        if (lastFrame == null)
-        {
-            //lastFrame = audioPlayer.provide();
-        }
-
         return lastFrame.data;
     }
 

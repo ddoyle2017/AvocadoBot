@@ -34,20 +34,28 @@ public class Listener extends ListenerAdapter
         {
             channel.sendMessage(":x: **I need a command!**").queue();
         }
-        else if (content.equals("!avocado help") || content.equals("!a help"))
+        else if (content.equals("!avocado help") || content.equals("!a help") || content.equals("!avocado commands") || content.equals("!a commands"))
         {
-            EmbedBuilder embedBuilder = new EmbedBuilder();
-            embedBuilder.setColor(java.awt.Color.GREEN);
-            embedBuilder.addField("!a play [URL | Query]", "Give AvocadoBot a song or YouTube link to play\n", false);
-            embedBuilder.addField("!a help", "Provides a list of commands\n", false);
-            embedBuilder.addField("!a hook [URL]", "Creates a webhook for updates from the given link", false);
-
             channel.sendMessage(":white_check_mark: **Here is the command list**").queue();
-            channel.sendMessage(embedBuilder.build()).queue();
+            channel.sendMessage(getCommandList()).queue();
         }
         else if (content.startsWith("!avocado play") || content.startsWith("!a play"))
         {
             channel.sendMessage(":notes: **Playing music**").queue();
+
+            //
+            // Here is where we start working with LavaPlayer
+            //
         }
+    }
+
+    private MessageEmbed getCommandList()
+    {
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setColor(java.awt.Color.GREEN);
+        embedBuilder.addField("!a play [URL | Query]", "Give AvocadoBot a song or YouTube link to play\n", false);
+        embedBuilder.addField("!a help", "Provides a list of commands\n", false);
+        embedBuilder.addField("!a hook [URL]", "Creates a webhook for updates from the given link", false);
+        return embedBuilder.build();
     }
 }

@@ -1,10 +1,3 @@
-/*
- * AvocadoBot Main Class
- *
- * Handles the instantiation of the bot through the JDA API, including
- * the bot's login information and token.
- *
- */
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.JDA;
@@ -12,18 +5,27 @@ import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import javax.security.auth.login.LoginException;
-import java.io.UnsupportedEncodingException;
 
-
+/**
+ * AvocadoBot Class
+ *
+ *  - This is where the initialization of the bot takes place. We create an instance of the SettingsManager class, get
+ *    the Discord Bot authentication information, then logs into Discord's servers.
+ *
+ *  - Afterwards, we attach a Listener object to the bot so that it can listen to text channels in the server
+ *    for commands
+ *
+ */
 public class AvocadoBot extends ListenerAdapter
 {
     private static JDA api;
 
-    public static void main (String[] args) throws InterruptedException, UnsupportedEncodingException
-    {
-        if (!System.getProperty("file.encoding").equals("UTF-8")) return;
 
-        setUpBot();
+    public static void main (String[] args)
+    {
+       if (!System.getProperty("file.encoding").equals("UTF-8")) return;
+
+       setUpBot();
     }
 
     private static void setUpBot()
@@ -38,13 +40,9 @@ public class AvocadoBot extends ListenerAdapter
 
             api.addEventListener(new Listener());
         }
-        catch (LoginException e) // problems with the bot account logging into Discord.
+        catch (LoginException | RateLimitedException | NullPointerException ex) // problems with the bot account logging into Discord.
         {
-            e.printStackTrace();
-        }
-        catch (RateLimitedException e) // too many user HTTP requests in a given time frame
-        {
-            e.printStackTrace();
+            ex.printStackTrace();
         }
     }
 

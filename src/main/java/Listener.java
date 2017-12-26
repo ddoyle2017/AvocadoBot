@@ -1,5 +1,9 @@
+import javafx.scene.paint.Color;
+import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
@@ -18,45 +22,32 @@ public class Listener extends ListenerAdapter
     @Override
     public void onMessageReceived(MessageReceivedEvent event)
     {
-        // block other bots from giving AvocadoBot commands
-        if (event.getAuthor().isBot()) return;
+        if (event.getAuthor().isBot()) return;                          // block other bots from giving AvocadoBot commands
+        if (!event.getMessage().isFromType(ChannelType.TEXT)) return;   // we only accept messages from a text channel (no DMs)
 
         Message message = event.getMessage();
-        String content = message.getRawContent();  // getRawContent is an atomic getter that keeps discord formatting
-        String[] tokens = content.split("\\s");
+        String content = message.getContentDisplay();
         MessageChannel channel = event.getChannel();
 
-        if (tokens[0].equals("!avocado") || tokens[0].equals("!a"))
+
+        if (content.equals("!avocado") || content.equals("!a"))
         {
-            try
-            {
-                switch (tokens[1])
-                {
-                    case "play":
-                        if (tokens.length < 3)
-                        {
-                            channel.sendMessage("I need a song name or YouTube link!").queue();
-                        }
-                        else
-                        {
-                            channel.sendMessage("Playing " + tokens[2]).queue();
-                        }
-                        break;
-                    case "hook":
-                        channel.sendMessage("Not implemented yet").queue();
-                        break;
-                    case "help":
-                        channel.sendMessage("Command list:\n    * play [NAME | URL] - plays a song\n").queue();
-                        break;
-                    default:
-                        channel.sendMessage("Invalid command. Try '!a help' for a list of commands").queue();
-                        break;
-                }
-            }
-            catch (IndexOutOfBoundsException ex)
-            {
-                channel.sendMessage("Please specify a command").queue();
-            }
+            channel.sendMessage(":x: **I need a command!**").queue();
+        }
+        else if (content.equals("!avocado help") || content.equals("!a help"))
+        {
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+            embedBuilder.setColor(java.awt.Color.GREEN);
+            embedBuilder.addField("!a play [URL | Query]", "Give AvocadoBot a song or YouTube link to play\n", false);
+            embedBuilder.addField("!a help", "Provides a list of commands\n", false);
+            embedBuilder.addField("!a hook [URL]", "Creates a webhook for updates from the given link", false);
+
+            channel.sendMessage(":white_check_mark: **Here is the command list**").queue();
+            channel.sendMessage(embedBuilder.build()).queue();
+        }
+        else if (content.startsWith("!avocado play") || content.startsWith("!a play"))
+        {
+            channel.sendMessage(":notes: **Playing music**").queue();
         }
     }
 }

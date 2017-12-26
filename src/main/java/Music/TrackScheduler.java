@@ -27,13 +27,11 @@ public class TrackScheduler extends AudioEventAdapter
 
     }
 
-    @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track)
     {
 
     }
 
-    @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason)
     {
         if (endReason.mayStartNext)
@@ -42,13 +40,11 @@ public class TrackScheduler extends AudioEventAdapter
         }
     }
 
-    @Override
     public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException ex)
     {
 
     }
 
-    @Override
     public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs)
     {
 

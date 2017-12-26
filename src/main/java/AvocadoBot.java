@@ -40,7 +40,7 @@ public class AvocadoBot extends ListenerAdapter
 
             api.addEventListener(new Listener());
         }
-        catch (LoginException | RateLimitedException | NullPointerException ex) // problems with the bot account logging into Discord.
+        catch (LoginException | RateLimitedException | NullPointerException ex)
         {
             ex.printStackTrace();
         }

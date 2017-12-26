@@ -75,7 +75,7 @@ public class Listener extends ListenerAdapter
 
         if (voiceChannel == null)
         {
-            channel.sendMessage(":x: **You have to be in a voice channel to use this command**").queue();
+            channel.sendMessage(":x: **You have to be in a voice channel to use this command.**").queue();
         }
         else if (manager.getConnectionStatus() != ConnectionStatus.CONNECTED)
         {
@@ -91,7 +91,11 @@ public class Listener extends ListenerAdapter
         if (manager.getConnectionStatus() == ConnectionStatus.CONNECTED)
         {
             manager.closeAudioConnection();
-            channel.sendMessage(":last_quarter_moon_with_face: **Successfully disconnected**").queue();
+            channel.sendMessage(":last_quarter_moon_with_face: **Successfully disconnected.**").queue();
+        }
+        else
+        {
+            channel.sendMessage(":x: **I am not connected to a voice channel.**").queue();
         }
     }
 }

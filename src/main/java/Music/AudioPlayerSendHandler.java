@@ -1,18 +1,18 @@
 package Music;
 
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import net.dv8tion.jda.core.audio.AudioSendHandler;
 
 
 public class AudioPlayerSendHandler implements AudioSendHandler
 {
-    private final AudioPlayer audioPlayer;
+    //private final AudioPlayer audioPlayer;
     private AudioFrame lastFrame;
 
     public AudioPlayerSendHandler()
     {
-        this.audioPlayer = audioPlayer;
+        //this.audioPlayer = audioPlayer;
     }
 
     @Override
@@ -20,7 +20,7 @@ public class AudioPlayerSendHandler implements AudioSendHandler
     {
         if (lastFrame == null)
         {
-            lastFrame = audioPlayer.provide();
+            //lastFrame = audioPlayer.provide();
         }
 
         return lastFrame != null;
@@ -31,7 +31,7 @@ public class AudioPlayerSendHandler implements AudioSendHandler
     {
         if (lastFrame == null)
         {
-            lastFrame = audioPlayer.provide();
+            //lastFrame = audioPlayer.provide();
         }
 
         return lastFrame.data;

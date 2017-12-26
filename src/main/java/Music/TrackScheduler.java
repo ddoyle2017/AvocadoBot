@@ -13,14 +13,17 @@ import java.util.concurrent.LinkedBlockingQueue;
 /**
  *  TrackScheduler Class
  *
- *  Event handler class for the AudioPlayer object. Handles user interactions like Play, Pause, Skip, etc.,
- *  as well as keeping track of the song queue.
+ *      - The TrackScheduler class acts as the Scheduler for the music track queue (recall Active Object design pattern). This class pairs together
+ *        an audio player with a blocking queue, then manages it. The class also implements the AudioEventAdapter interface, which provides
+ *        abstract methods for audio Event Listeners. Events like pausing a song, resuming it, starting a song, exception handling, and a song
+ *        stream getting stuck are all handled here.
  *
  */
 public class TrackScheduler extends AudioEventAdapter
 {
     private final AudioPlayer player;
-    private final BlockingQueue<AudioTrack> queue;
+    private final BlockingQueue<AudioTrack> queue;      // A blocking queue blocks adding items to the queue if its full, and blocks the removal
+                                                        // of items when the queue is empty.
 
 
     public TrackScheduler(AudioPlayer audioPlayer)
@@ -29,12 +32,19 @@ public class TrackScheduler extends AudioEventAdapter
         this.queue  = new LinkedBlockingQueue<>();
     }
 
-    public void queue (AudioTrack track)
+    // If queue is empty, play track ASAP. Else, add the track to the queue
+    public void queue(AudioTrack track)
     {
-        if (player.startTrack(track, true))
+        if (!player.startTrack(track, true))
         {
             queue.offer(track);
         }
+    }
+
+    // Force next track to play
+    public void nextTrack(AudioTrack track)
+    {
+        player.startTrack(queue.poll(), false);     // nointerrupt is false here because we want to force the next track to play
     }
 
 
@@ -61,7 +71,7 @@ public class TrackScheduler extends AudioEventAdapter
     {
         if (endReason.mayStartNext)
         {
-            // play next track
+            nextTrack(track);
         }
     }
 

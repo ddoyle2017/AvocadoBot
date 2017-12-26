@@ -1,4 +1,6 @@
 import Music.AudioPlayerSendHandler;
+import Music.MusicLoadResultHandler;
+import Music.MusicManager;
 import Music.TrackScheduler;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
@@ -24,6 +26,8 @@ import net.dv8tion.jda.core.managers.AudioManager;
  */
 public class Listener extends ListenerAdapter
 {
+    private AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
+    private MusicManager       musicManager  = new MusicManager(playerManager);
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event)
@@ -31,10 +35,13 @@ public class Listener extends ListenerAdapter
         if (event.getAuthor().isBot()) return;                          // block other bots from giving AvocadoBot commands
         if (!event.getMessage().isFromType(ChannelType.TEXT)) return;   // we only accept messages from a text channel (no DMs)
 
-        Message         message = event.getMessage();
-        String          content = message.getContentDisplay();
-        MessageChannel  channel = event.getChannel();
-        AudioManager    manager = event.getGuild().getAudioManager();
+        Message             message = event.getMessage();
+        String              content = message.getContentDisplay();
+        MessageChannel      channel = event.getChannel();
+        AudioManager        manager = event.getGuild().getAudioManager();
+
+        manager.setSendingHandler(musicManager.getSendHandler());
+        AudioSourceManagers.registerRemoteSources(playerManager);
 
 
         if (content.equals("!avocado") || content.equals("!a"))
@@ -48,43 +55,9 @@ public class Listener extends ListenerAdapter
         }
         else if (content.startsWith("!avocado play") || content.startsWith("!a play"))
         {
-            channel.sendMessage(":notes: **Playing music**").queue();
+            String trackUrl = content.substring(content.lastIndexOf("play")+5, content.length()).trim();
             joinVoiceChannel(event, channel);
-
-            AudioPlayerManager playerManager = new DefaultAudioPlayerManager();     // create a manager for our audio sources
-            AudioSourceManagers.registerRemoteSources(playerManager);
-            AudioPlayer player = playerManager.createPlayer();                      // create an audio player for our audio source manager to use
-            manager.setSendingHandler(new AudioPlayerSendHandler(player));          // attach an audio output source to our bot
-
-            TrackScheduler scheduler = new TrackScheduler(player);                  // create a scheduler to manage our song queue, then attach it to the player
-            player.addListener(scheduler);                                          // register the scheduler with the player
-            String identifier = "https://www.youtube.com/watch?v=9alXo1OXTec";      // the Gucci Gang Test
-
-            playerManager.loadItem(identifier, new AudioLoadResultHandler() {
-                @Override
-                public void trackLoaded(AudioTrack track) {
-                    scheduler.queue(track);
-                }
-
-                @Override
-                public void playlistLoaded(AudioPlaylist playlist) {
-                    for (AudioTrack track : playlist.getTracks()) {
-                        scheduler.queue(track);
-                    }
-                }
-
-                @Override
-                public void noMatches() {
-                    // Notify the user that we've got nothing
-                }
-
-                @Override
-                public void loadFailed(FriendlyException throwable) {
-                    // Notify the user that everything exploded
-                }
-            });
-
-
+            playerManager.loadItemOrdered(musicManager, trackUrl, new MusicLoadResultHandler(musicManager, channel));
         }
         else if (content.equals("!avocado join") || content.equals("!a join"))
         {

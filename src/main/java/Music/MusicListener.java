@@ -24,7 +24,6 @@ public class MusicListener extends ListenerAdapter
     private AudioPlayerManager playerManager  = new DefaultAudioPlayerManager();
     private MusicManager       musicManager   = new MusicManager(playerManager);
     private boolean            isMusicPlaying = false;
-    private boolean            isConnected    = false;
     private AudioManager       manager;
 
 
@@ -77,7 +76,7 @@ public class MusicListener extends ListenerAdapter
             {
                 channel.sendMessage(":x: **Player is already paused.**").queue();
             }
-            else if (!isConnected)
+            else if (!isAudioConnected())
             {
                 channel.sendMessage(":x: **You have to be in a voice channel to use this command.**").queue();
             }
@@ -94,7 +93,7 @@ public class MusicListener extends ListenerAdapter
                 channel.sendMessage("**Resuming** :play_pause:").queue();
                 musicManager.getPlayer().setPaused(false);
             }
-            else if (!isConnected)
+            else if (!isAudioConnected())
             {
                 channel.sendMessage(":x: **You have to be in a voice channel to use this command.**").queue();
             }
@@ -105,7 +104,7 @@ public class MusicListener extends ListenerAdapter
         }
         else if (content.equals("!avocado skip") || content.equals("!a skip") || content.equals("!avocado next") || content.equals("!a next"))
         {
-            if (!isConnected)
+            if (!isAudioConnected())
             {
                 channel.sendMessage(":x: **You have to be in a voice channel to use this command.**").queue();
             }
@@ -137,25 +136,28 @@ public class MusicListener extends ListenerAdapter
         {
             channel.sendMessage(":x: **You have to be in a voice channel to use this command.**").queue();
         }
-        else if (manager.getConnectionStatus() != ConnectionStatus.CONNECTED)
+        else if (!isAudioConnected())
         {
             manager.openAudioConnection(voiceChannel);
             channel.sendMessage(":ok_hand: **Joined** `" + voiceChannel.getName() + "`").queue();
-            isConnected = true;
         }
     }
 
     private void leaveVoiceChannel(MessageReceivedEvent event, MessageChannel channel)
     {
-        if (manager.getConnectionStatus() == ConnectionStatus.CONNECTED)
+        if (isAudioConnected())
         {
             manager.closeAudioConnection();
             channel.sendMessage(":last_quarter_moon_with_face: **Successfully disconnected.**").queue();
-            isConnected = false;
         }
         else
         {
             channel.sendMessage(":x: **I am not connected to a voice channel.**").queue();
         }
+    }
+
+    private boolean isAudioConnected()
+    {
+        return (manager.getConnectionStatus() == ConnectionStatus.CONNECTED);
     }
 }

@@ -1,3 +1,4 @@
+import Music.MusicListener;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.JDA;
@@ -39,6 +40,7 @@ public class AvocadoBot extends ListenerAdapter
                     .buildAsync();
 
             api.addEventListener(new Listener());
+            api.addEventListener(new MusicListener());
         }
         catch (LoginException | RateLimitedException | NullPointerException ex)
         {

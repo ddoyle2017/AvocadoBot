@@ -12,3 +12,5 @@
 # AvocadoBot #
 auth.json
 
+# macOS #
+.DS_Store

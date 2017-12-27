@@ -26,7 +26,7 @@ public class TrackScheduler extends AudioEventAdapter
                                                         // of items when the queue is empty.
 
 
-    public TrackScheduler(AudioPlayer audioPlayer)
+    TrackScheduler(AudioPlayer audioPlayer)
     {
         this.player = audioPlayer;
         this.queue  = new LinkedBlockingQueue<>();
@@ -42,7 +42,7 @@ public class TrackScheduler extends AudioEventAdapter
     }
 
     // Force next track to play
-    public void nextTrack(AudioTrack track)
+    public void nextTrack()
     {
         player.startTrack(queue.poll(), false);     // nointerrupt is false here because we want to force the next track to play
     }
@@ -71,7 +71,7 @@ public class TrackScheduler extends AudioEventAdapter
     {
         if (endReason.mayStartNext)
         {
-            nextTrack(track);
+            nextTrack();
         }
     }
 

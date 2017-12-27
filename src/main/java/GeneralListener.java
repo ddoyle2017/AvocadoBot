@@ -3,6 +3,8 @@ import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
+import java.awt.*;
+
 
 /**
  * GeneralListener Class
@@ -34,6 +36,10 @@ public class GeneralListener extends ListenerAdapter
             channel.sendMessage(":white_check_mark: **Here is the command list**").queue();
             channel.sendMessage(getCommandList()).queue();
         }
+        else if (content.equals("!avocado whoami") || content.equals("!a whoami"))
+        {
+            channel.sendMessage(getBotInfo()).queue();
+        }
     }
 
     private MessageEmbed getCommandList()
@@ -41,12 +47,25 @@ public class GeneralListener extends ListenerAdapter
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setColor(java.awt.Color.GREEN);
         embedBuilder.addField("!a play [URL | Query]", "Give AvocadoBot a song or YouTube link to play.\n", false);
-        embedBuilder.addField("!a pause", "Pauses current song\n", false);
+        embedBuilder.addField("!a stop", "Stops the current song\n", false);
+        embedBuilder.addField("!a pause", "Pauses the current song\n", false);
         embedBuilder.addField("!a resume", "Continues playing a paused song\n", false);
         embedBuilder.addField("!a join", "AvocadoBot will join your voice channel.\n", false);
         embedBuilder.addField("!a leave", "Disconnects AvocadoBot from your voice channel.\n", false);
         embedBuilder.addField("!a hook [URL]", "Creates a webhook for updates from the given link.\n", false);
-        embedBuilder.addField("!a help", "Provides a list of commands.", false);
+        embedBuilder.addField("!a help", "Provides a list of commands.\n", false);
+        embedBuilder.addField("!a whoami", "Information about AvocadoBot.", false);
+
+        return embedBuilder.build();
+    }
+
+    private MessageEmbed getBotInfo()
+    {
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setColor(Color.MAGENTA);
+        embedBuilder.addField(":avocado: **AvocadoBot**\n", "I'm a general purpose bot for Discord!\n",false);
+        embedBuilder.addField("Info:", ":keyboard:**Developer:** W O L F:first_quarter_moon_with_face:#6218", false);
+
         return embedBuilder.build();
     }
 }

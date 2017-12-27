@@ -13,7 +13,7 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
     private final MusicManager   manager;
 
 
-    public MusicLoadResultHandler(MusicManager manager, MessageChannel channel)
+    MusicLoadResultHandler(MusicManager manager, MessageChannel channel)
     {
         this.channel  = channel;
         this.manager  = manager;

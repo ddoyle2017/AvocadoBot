@@ -64,10 +64,9 @@ public class MusicListener extends ListenerAdapter
         }
         else if (content.startsWith("!avocado play") || content.startsWith("!a play"))
         {
-            String trackUrl = content.substring(content.lastIndexOf("play") + 5, content.length()).trim();
-            System.out.println("PRINT CHECK: " + trackUrl);
-
             joinVoiceChannel(event, channel);
+
+            String trackUrl = content.substring(content.lastIndexOf("play") + 5, content.length()).trim();
             playerManager.loadItemOrdered(musicManager, trackUrl, new MusicLoadResultHandler(musicManager, channel));
             isMusicPlaying = true;
         }
@@ -77,7 +76,7 @@ public class MusicListener extends ListenerAdapter
             {
                 channel.sendMessage(":x: **Player is already paused.**").queue();
             }
-            else if (manager.getConnectionStatus() != ConnectionStatus.CONNECTED)
+            else if (!isAudioConnected())
             {
                 channel.sendMessage(":x: **You have to be in a voice channel to use this command.**").queue();
             }
@@ -94,13 +93,29 @@ public class MusicListener extends ListenerAdapter
                 channel.sendMessage("**Resuming** :play_pause:").queue();
                 musicManager.getPlayer().setPaused(false);
             }
-            else if (manager.getConnectionStatus() != ConnectionStatus.CONNECTED)
+            else if (!isAudioConnected())
             {
                 channel.sendMessage(":x: **You have to be in a voice channel to use this command.**").queue();
             }
             else
             {
                 channel.sendMessage(":x: **Player is not paused.**").queue();
+            }
+        }
+        else if (content.equals("!avocado skip") || content.equals("!a skip") || content.equals("!avocado next") || content.equals("!a next"))
+        {
+            if (!isAudioConnected())
+            {
+                channel.sendMessage(":x: **You have to be in a voice channel to use this command.**").queue();
+            }
+            else if (!isMusicPlaying)
+            {
+                channel.sendMessage(":x: **Nothing is playing right now**").queue();
+            }
+            else
+            {
+                channel.sendMessage("**Skipped** :fast_forward:").queue();
+                musicManager.getScheduler().nextTrack();
             }
         }
         else if (content.equals("!avocado join") || content.equals("!a join"))
@@ -116,13 +131,12 @@ public class MusicListener extends ListenerAdapter
     private void joinVoiceChannel(MessageReceivedEvent event, MessageChannel channel)
     {
         VoiceChannel voiceChannel = event.getMember().getVoiceState().getChannel();
-        manager = event.getGuild().getAudioManager(); // a Discord server is called a "Guild"
 
         if (voiceChannel == null)
         {
             channel.sendMessage(":x: **You have to be in a voice channel to use this command.**").queue();
         }
-        else if (manager.getConnectionStatus() != ConnectionStatus.CONNECTED)
+        else if (!isAudioConnected())
         {
             manager.openAudioConnection(voiceChannel);
             channel.sendMessage(":ok_hand: **Joined** `" + voiceChannel.getName() + "`").queue();
@@ -131,9 +145,7 @@ public class MusicListener extends ListenerAdapter
 
     private void leaveVoiceChannel(MessageReceivedEvent event, MessageChannel channel)
     {
-        manager = event.getGuild().getAudioManager();
-
-        if (manager.getConnectionStatus() == ConnectionStatus.CONNECTED)
+        if (isAudioConnected())
         {
             manager.closeAudioConnection();
             channel.sendMessage(":last_quarter_moon_with_face: **Successfully disconnected.**").queue();
@@ -142,5 +154,10 @@ public class MusicListener extends ListenerAdapter
         {
             channel.sendMessage(":x: **I am not connected to a voice channel.**").queue();
         }
+    }
+
+    private boolean isAudioConnected()
+    {
+        return (manager.getConnectionStatus() == ConnectionStatus.CONNECTED);
     }
 }

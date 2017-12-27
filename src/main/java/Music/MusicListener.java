@@ -13,6 +13,12 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import net.dv8tion.jda.core.managers.AudioManager;
 
 
+/**
+ *  MusicListener Class
+ *
+ *      - An event listener for all bot commands relevant to music playing and audio.
+ *
+ */
 public class MusicListener extends ListenerAdapter
 {
     private AudioPlayerManager playerManager  = new DefaultAudioPlayerManager();

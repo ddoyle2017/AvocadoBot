@@ -3,14 +3,15 @@ import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
+
 /**
- * Listener Class
+ * GeneralListener Class
  *
- * - All event listeners go here. This class grabs any messages received via Discord, parses the strings, then
- *   handles the commands.
+ *      - An event listener for AvocadoBot. Handles all "general" commands to the bot that aren't specific to a feature, e.g. providing a command
+ *        list or checking to see if a command was properly given.
  *
  */
-public class Listener extends ListenerAdapter
+public class GeneralListener extends ListenerAdapter
 {
 
     @Override

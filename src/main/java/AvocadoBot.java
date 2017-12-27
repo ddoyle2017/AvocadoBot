@@ -13,7 +13,7 @@ import javax.security.auth.login.LoginException;
  *  - This is where the initialization of the bot takes place. We create an instance of the SettingsManager class, get
  *    the Discord Bot authentication information, then logs into Discord's servers.
  *
- *  - Afterwards, we attach a Listener object to the bot so that it can listen to text channels in the server
+ *  - Afterwards, we attach a GeneralListener object to the bot so that it can listen to text channels in the server
  *    for commands
  *
  */
@@ -39,7 +39,7 @@ public class AvocadoBot extends ListenerAdapter
                     .setToken(settings.getBotToken())
                     .buildAsync();
 
-            api.addEventListener(new Listener());
+            api.addEventListener(new GeneralListener());
             api.addEventListener(new MusicListener());
         }
         catch (LoginException | RateLimitedException | NullPointerException ex)

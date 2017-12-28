@@ -5,7 +5,6 @@ import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import net.dv8tion.jda.core.audio.hooks.ConnectionStatus;
 import net.dv8tion.jda.core.entities.ChannelType;
-import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -37,7 +36,6 @@ public class MusicListener extends ListenerAdapter
         String content = event.getMessage().getContentDisplay();
         channel = event.getChannel();
         manager = event.getGuild().getAudioManager();
-
         manager.setSendingHandler(musicManager.getSendHandler());
         AudioSourceManagers.registerRemoteSources(playerManager);
 
@@ -87,9 +85,9 @@ public class MusicListener extends ListenerAdapter
         }
     }
 
-//==================================================================================================================================================//
-//  Music Control Methods                                                                                                                           //
-//==================================================================================================================================================//
+//=================================================================================================================================================//
+//  Music Control Methods                                                                                                                          //
+//=================================================================================================================================================//
     private void playSong(MessageReceivedEvent event, String content)
     {
         String trackUrl = content.substring(content.lastIndexOf("play") + 5, content.length()).trim();
@@ -140,13 +138,17 @@ public class MusicListener extends ListenerAdapter
 
     private void pauseSong()
     {
-        if (musicManager.getPlayer().isPaused())
-        {
-            channel.sendMessage(":x: **Player is already paused.**").queue();
-        }
-        else if (!isAudioConnected())
+        if (!isAudioConnected())
         {
             channel.sendMessage(":x: **You have to be in a voice channel to use this command.**").queue();
+        }
+        else if (!isMusicPlaying)
+        {
+            channel.sendMessage(":x: **Nothing is playing right now.**").queue();
+        }
+        else if (musicManager.getPlayer().isPaused())
+        {
+            channel.sendMessage(":x: **Player is already paused.**").queue();
         }
         else
         {
@@ -170,9 +172,9 @@ public class MusicListener extends ListenerAdapter
         }
     }
 
-//==================================================================================================================================================//
-//  Helper Functions                                                                                                                                //
-//==================================================================================================================================================//
+//=================================================================================================================================================//
+//  Helper Functions                                                                                                                               //
+//=================================================================================================================================================//
     private void joinVoiceChannel(MessageReceivedEvent event)
     {
         VoiceChannel voiceChannel = event.getMember().getVoiceState().getChannel();

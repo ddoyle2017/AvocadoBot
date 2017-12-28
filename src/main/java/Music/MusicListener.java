@@ -162,11 +162,13 @@ public class MusicListener extends ListenerAdapter
         if (!isAudioConnected())
         {
             channel.sendMessage(":x: **You have to be in a voice channel to use this command.**").queue();
-        } else if (musicManager.getPlayer().isPaused())
+        }
+        else if (musicManager.getPlayer().isPaused())
         {
             channel.sendMessage("**Resuming** :play_pause:").queue();
             musicManager.getPlayer().setPaused(false);
-        } else
+        }
+        else
         {
             channel.sendMessage(":x: **Player is not paused.**").queue();
         }

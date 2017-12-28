@@ -5,10 +5,10 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 
 
 /**
- *  MusicManager
+ * MusicManager
  *
- *      - Overall music manager for a Guild (Discord Server). Pairs the audio player (executes the playing of tracks) with the track scheduler
- *        (manages the queue of tracks to play) into one object.
+ *  - Overall music manager for a Guild (Discord Server). Pairs the audio player (executes the playing of tracks) with the track
+ *    scheduler (manages the queue of tracks to play) into one object.
  *
  */
 public class MusicManager
@@ -17,7 +17,7 @@ public class MusicManager
     private final TrackScheduler scheduler;
 
 
-    public MusicManager(AudioPlayerManager manager)
+    MusicManager(AudioPlayerManager manager)
     {
         player = manager.createPlayer();
         scheduler = new TrackScheduler(player);

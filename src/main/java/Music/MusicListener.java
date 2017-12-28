@@ -14,9 +14,9 @@ import net.dv8tion.jda.core.managers.AudioManager;
 
 
 /**
- *  MusicListener Class
+ * MusicListener Class
  *
- *      - An event listener for all bot commands relevant to music playing and audio.
+ *  - An event listener for all bot commands relevant to music playing and audio.
  *
  */
 public class MusicListener extends ListenerAdapter
@@ -25,6 +25,7 @@ public class MusicListener extends ListenerAdapter
     private MusicManager       musicManager   = new MusicManager(playerManager);
     private boolean            isMusicPlaying = false;
     private AudioManager       manager;
+    private MessageChannel     channel;
 
 
     @Override
@@ -33,9 +34,8 @@ public class MusicListener extends ListenerAdapter
         if (event.getAuthor().isBot()) return;                          // block other bots from giving AvocadoBot commands
         if (!event.getMessage().isFromType(ChannelType.TEXT)) return;   // we only accept messages from a text channel (no DMs)
 
-        Message         message = event.getMessage();
-        String          content = message.getContentDisplay();
-        MessageChannel  channel = event.getChannel();
+        String content = event.getMessage().getContentDisplay();
+        channel = event.getChannel();
         manager = event.getGuild().getAudioManager();
 
         manager.setSendingHandler(musicManager.getSendHandler());
@@ -52,83 +52,128 @@ public class MusicListener extends ListenerAdapter
             {
                 channel.sendMessage(":x: **Missing a song or URL.**").queue();
             }
-            else if (musicManager.getPlayer().isPaused())
+            else
             {
-                channel.sendMessage("**Resuming** :play_pause:").queue();
-                musicManager.getPlayer().setPaused(false);
-            }
-            else if (!musicManager.getPlayer().isPaused())
-            {
-                channel.sendMessage(":x: **Player is not paused.**").queue();
+                resumeSong();
             }
         }
         else if (content.startsWith("!avocado play") || content.startsWith("!a play"))
         {
-            joinVoiceChannel(event, channel);
-
-            String trackUrl = content.substring(content.lastIndexOf("play") + 5, content.length()).trim();
-            playerManager.loadItemOrdered(musicManager, trackUrl, new MusicLoadResultHandler(musicManager, channel));
-            isMusicPlaying = true;
+            playSong(event, content);
         }
-        else if (content.equals("!avocado pause") || content.equals("!a pause") || content.equals("!avocado stop") || content.equals("!a stop"))
+        else if (content.equals("!avocado stop") || content.equals("!a stop"))
         {
-            if (musicManager.getPlayer().isPaused())
-            {
-                channel.sendMessage(":x: **Player is already paused.**").queue();
-            }
-            else if (!isAudioConnected())
-            {
-                channel.sendMessage(":x: **You have to be in a voice channel to use this command.**").queue();
-            }
-            else
-            {
-                channel.sendMessage("**Paused** :pause_button:").queue();
-                musicManager.getPlayer().setPaused(true);
-            }
+            stopSong();
+        }
+        else if (content.equals("!avocado pause") || content.equals("!a pause"))
+        {
+            pauseSong();
         }
         else if (content.equals("!avocado resume") || content.equals("!a resume"))
         {
-            if (musicManager.getPlayer().isPaused())
-            {
-                channel.sendMessage("**Resuming** :play_pause:").queue();
-                musicManager.getPlayer().setPaused(false);
-            }
-            else if (!isAudioConnected())
-            {
-                channel.sendMessage(":x: **You have to be in a voice channel to use this command.**").queue();
-            }
-            else
-            {
-                channel.sendMessage(":x: **Player is not paused.**").queue();
-            }
+            resumeSong();
         }
         else if (content.equals("!avocado skip") || content.equals("!a skip") || content.equals("!avocado next") || content.equals("!a next"))
         {
-            if (!isAudioConnected())
-            {
-                channel.sendMessage(":x: **You have to be in a voice channel to use this command.**").queue();
-            }
-            else if (!isMusicPlaying)
-            {
-                channel.sendMessage(":x: **Nothing is playing right now**").queue();
-            }
-            else
-            {
-                channel.sendMessage("**Skipped** :fast_forward:").queue();
-                musicManager.getScheduler().nextTrack();
-            }
+            skipSong();
         }
         else if (content.equals("!avocado join") || content.equals("!a join"))
         {
-            joinVoiceChannel(event, channel);
+            joinVoiceChannel(event);
         }
         else if (content.equals("!avocado leave") || content.equals("!a leave"))
         {
-            leaveVoiceChannel(event, channel);
+            leaveVoiceChannel();
         }
     }
 
-    private void joinVoiceChannel(MessageReceivedEvent event, MessageChannel channel)
+//==================================================================================================================================================//
+//  Music Control Methods                                                                                                                           //
+//==================================================================================================================================================//
+    private void playSong(MessageReceivedEvent event, String content)
+    {
+        String trackUrl = content.substring(content.lastIndexOf("play") + 5, content.length()).trim();
+
+        if (!isMusicPlaying)
+        {
+            joinVoiceChannel(event);
+            isMusicPlaying = true;
+        }
+        playerManager.loadItemOrdered(musicManager, trackUrl, new MusicLoadResultHandler(musicManager, channel));
+    }
+
+    private void stopSong()
+    {
+        if (!isAudioConnected())
+        {
+            channel.sendMessage(":x: **You have to be in a voice channel to use this command.**").queue();
+        }
+        else if (!isMusicPlaying)
+        {
+            channel.sendMessage(":x: **Nothing is playing right now.**").queue();
+        }
+        else
+        {
+            channel.sendMessage("**Stopped** :stop_button:").queue();
+            isMusicPlaying = false;
+            musicManager.getPlayer().stopTrack();
+            leaveVoiceChannel();
+        }
+    }
+
+    private void skipSong()
+    {
+        if (!isAudioConnected())
+        {
+            channel.sendMessage(":x: **You have to be in a voice channel to use this command.**").queue();
+        }
+        else if (!isMusicPlaying)
+        {
+            channel.sendMessage(":x: **Nothing is playing right now.**").queue();
+        }
+        else
+        {
+            channel.sendMessage("**Skipped** :fast_forward:").queue();
+            musicManager.getScheduler().nextTrack();
+        }
+    }
+
+    private void pauseSong()
+    {
+        if (musicManager.getPlayer().isPaused())
+        {
+            channel.sendMessage(":x: **Player is already paused.**").queue();
+        }
+        else if (!isAudioConnected())
+        {
+            channel.sendMessage(":x: **You have to be in a voice channel to use this command.**").queue();
+        }
+        else
+        {
+            channel.sendMessage("**Paused** :pause_button:").queue();
+            musicManager.getPlayer().setPaused(true);
+        }
+    }
+
+    private void resumeSong()
+    {
+        if (!isAudioConnected())
+        {
+            channel.sendMessage(":x: **You have to be in a voice channel to use this command.**").queue();
+        } else if (musicManager.getPlayer().isPaused())
+        {
+            channel.sendMessage("**Resuming** :play_pause:").queue();
+            musicManager.getPlayer().setPaused(false);
+        } else
+        {
+            channel.sendMessage(":x: **Player is not paused.**").queue();
+        }
+    }
+
+//==================================================================================================================================================//
+//  Helper Functions                                                                                                                                //
+//==================================================================================================================================================//
+    private void joinVoiceChannel(MessageReceivedEvent event)
     {
         VoiceChannel voiceChannel = event.getMember().getVoiceState().getChannel();
 
@@ -143,7 +188,7 @@ public class MusicListener extends ListenerAdapter
         }
     }
 
-    private void leaveVoiceChannel(MessageReceivedEvent event, MessageChannel channel)
+    private void leaveVoiceChannel()
     {
         if (isAudioConnected())
         {

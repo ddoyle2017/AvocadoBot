@@ -1,4 +1,5 @@
 package Music;
+import Resources.BotReply;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
@@ -42,13 +43,13 @@ public class MusicListener extends ListenerAdapter
 
         if (content.equals("!avocado") || content.equals("!a"))
         {
-            channel.sendMessage(":x: **I need a command!**").queue();
+            channel.sendMessage(BotReply.MISSING_COMMAND).queue();
         }
         else if (content.equals("!avocado play") || content.equals("!a play"))
         {
             if (!isMusicPlaying)
             {
-                channel.sendMessage(":x: **Missing a song or URL.**").queue();
+                channel.sendMessage(BotReply.MISSING_SONG).queue();
             }
             else
             {
@@ -104,15 +105,15 @@ public class MusicListener extends ListenerAdapter
     {
         if (!isAudioConnected())
         {
-            channel.sendMessage(":x: **You have to be in a voice channel to use this command.**").queue();
+            channel.sendMessage(BotReply.MISSING_VOICE_CHANNEL).queue();
         }
         else if (!isMusicPlaying)
         {
-            channel.sendMessage(":x: **Nothing is playing right now.**").queue();
+            channel.sendMessage(BotReply.NOTHING_IS_PLAYING).queue();
         }
         else
         {
-            channel.sendMessage("**Stopped** :stop_button:").queue();
+            channel.sendMessage(BotReply.SONG_STOPPED).queue();
             isMusicPlaying = false;
             musicManager.getPlayer().stopTrack();
             leaveVoiceChannel();
@@ -123,15 +124,15 @@ public class MusicListener extends ListenerAdapter
     {
         if (!isAudioConnected())
         {
-            channel.sendMessage(":x: **You have to be in a voice channel to use this command.**").queue();
+            channel.sendMessage(BotReply.MISSING_VOICE_CHANNEL).queue();
         }
         else if (!isMusicPlaying)
         {
-            channel.sendMessage(":x: **Nothing is playing right now.**").queue();
+            channel.sendMessage(BotReply.NOTHING_IS_PLAYING).queue();
         }
         else
         {
-            channel.sendMessage("**Skipped** :fast_forward:").queue();
+            channel.sendMessage(BotReply.SONG_SKIPPED).queue();
             musicManager.getScheduler().nextTrack();
         }
     }
@@ -140,19 +141,19 @@ public class MusicListener extends ListenerAdapter
     {
         if (!isAudioConnected())
         {
-            channel.sendMessage(":x: **You have to be in a voice channel to use this command.**").queue();
+            channel.sendMessage(BotReply.MISSING_VOICE_CHANNEL).queue();
         }
         else if (!isMusicPlaying)
         {
-            channel.sendMessage(":x: **Nothing is playing right now.**").queue();
+            channel.sendMessage(BotReply.NOTHING_IS_PLAYING).queue();
         }
         else if (musicManager.getPlayer().isPaused())
         {
-            channel.sendMessage(":x: **Player is already paused.**").queue();
+            channel.sendMessage(BotReply.SONG_ALREADY_PAUSED).queue();
         }
         else
         {
-            channel.sendMessage("**Paused** :pause_button:").queue();
+            channel.sendMessage(BotReply.SONG_PAUSED).queue();
             musicManager.getPlayer().setPaused(true);
         }
     }
@@ -161,16 +162,16 @@ public class MusicListener extends ListenerAdapter
     {
         if (!isAudioConnected())
         {
-            channel.sendMessage(":x: **You have to be in a voice channel to use this command.**").queue();
+            channel.sendMessage(BotReply.MISSING_VOICE_CHANNEL).queue();
         }
         else if (musicManager.getPlayer().isPaused())
         {
-            channel.sendMessage("**Resuming** :play_pause:").queue();
+            channel.sendMessage(BotReply.SONG_RESUMED).queue();
             musicManager.getPlayer().setPaused(false);
         }
         else
         {
-            channel.sendMessage(":x: **Player is not paused.**").queue();
+            channel.sendMessage(BotReply.SONG_NOT_PAUSED).queue();
         }
     }
 
@@ -183,7 +184,7 @@ public class MusicListener extends ListenerAdapter
 
         if (voiceChannel == null)
         {
-            channel.sendMessage(":x: **You have to be in a voice channel to use this command.**").queue();
+            channel.sendMessage(BotReply.MISSING_VOICE_CHANNEL).queue();
         }
         else if (!isAudioConnected())
         {
@@ -197,11 +198,11 @@ public class MusicListener extends ListenerAdapter
         if (isAudioConnected())
         {
             manager.closeAudioConnection();
-            channel.sendMessage(":last_quarter_moon_with_face: **Successfully disconnected.**").queue();
+            channel.sendMessage(BotReply.VOICE_CHANNEL_DISCONNECT).queue();
         }
         else
         {
-            channel.sendMessage(":x: **I am not connected to a voice channel.**").queue();
+            channel.sendMessage(BotReply.NOT_IN_VOICE_CHANNEL).queue();
         }
     }
 

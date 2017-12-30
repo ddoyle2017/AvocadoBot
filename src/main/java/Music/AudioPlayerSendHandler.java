@@ -7,10 +7,12 @@ import net.dv8tion.jda.core.audio.AudioSendHandler;
 /**
  * AudioPlayerSendHandler
  *
- *  - A wrapper class for the LavaPlayer API's AudioPlayer class which makes it compatible with JDA's AudioSendHandler class. The Opus Codec is
- *    used to compress and transfer audio data from our streaming source (Youtube for example). Audio data is transferred in "frames" of 20
- *    milliseconds of play time. The canProvide() method is called before every provide20MsAudio() call, to prime the next Opus frame before its
- *    delivered to the output destination (AvocadoBot's audio output). If canProvide() returns false, our stream is over.
+ * - A wrapper class for the LavaPlayer API's AudioPlayer class which makes it compatible with JDA's AudioSendHandler class.
+ *   The Opus Codec is used to compress and transfer audio data from our streaming source (Youtube for example). Audio data
+ *   is transferred in "frames" of 20 milliseconds of play time.
+ *
+ *   The canProvide() method is called before every provide20MsAudio() call, to prime the next Opus frame before its
+ *   delivered to the output destination (AvocadoBot's audio output). If canProvide() returns false, our stream is over.
  *
  */
 public class AudioPlayerSendHandler implements AudioSendHandler

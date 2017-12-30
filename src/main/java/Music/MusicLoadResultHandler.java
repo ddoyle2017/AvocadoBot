@@ -7,6 +7,12 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.core.entities.MessageChannel;
 
 
+/**
+ * MusicLoadResultHandler
+ *
+ * - Handles the results of the TrackScheduler's actions on the tracks.
+ *
+ */
 public class MusicLoadResultHandler implements AudioLoadResultHandler
 {
     private final MessageChannel channel;

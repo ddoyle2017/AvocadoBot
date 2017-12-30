@@ -42,11 +42,7 @@ public class MusicListener extends ListenerAdapter
         AudioSourceManagers.registerRemoteSources(playerManager);
 
 
-        if (content.equals("!avocado") || content.equals("!a"))
-        {
-            channel.sendMessage(BotReply.MISSING_COMMAND).queue();
-        }
-        else if (content.equals("!avocado play") || content.equals("!a play"))
+        if (content.equals("!avocado play") || content.equals("!a play"))
         {
             if (!isMusicPlaying)
             {

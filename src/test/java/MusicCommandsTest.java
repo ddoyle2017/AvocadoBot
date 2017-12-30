@@ -9,7 +9,7 @@ import org.junit.Test;
 
 public class MusicCommandsTest
 {
-    private JDA api = AvocadoBot.getAPI();
+    //private JDA api = AvocadoBot.getAPI();
     private boolean isMusicPlaying;
     private boolean isAudioConnected;
 
@@ -32,12 +32,6 @@ public class MusicCommandsTest
     private String leaveCommandLong   = "!avocado leave";
     private String leaveCommandShort  = "!a leave";
 
-
-    @Test
-    public void emptyCommandTest()
-    {
-
-    }
 
     @Test
     public void playCommand_MissingSongTest()

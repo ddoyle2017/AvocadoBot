@@ -1,3 +1,5 @@
+import Resources.BotReply;
+
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -9,8 +11,8 @@ import java.awt.*;
 /**
  * GeneralListener Class
  *
- *      - An event listener for AvocadoBot. Handles all "general" commands to the bot that aren't specific to a feature, e.g. providing a command
- *        list or checking to see if a command was properly given.
+ *  - An event listener for AvocadoBot. Handles all "general" commands to the bot that aren't specific to a feature, e.g. providing a command
+ *    list or checking to see if a command was properly given.
  *
  */
 public class GeneralListener extends ListenerAdapter
@@ -29,7 +31,7 @@ public class GeneralListener extends ListenerAdapter
 
         if (content.equals("!avocado") || content.equals("!a"))
         {
-            channel.sendMessage(":x: **I need a command!**").queue();
+            channel.sendMessage(BotReply.MISSING_COMMAND).queue();
         }
         else if (content.equals("!avocado help") || content.equals("!a help") || content.equals("!avocado commands") || content.equals("!a commands"))
         {

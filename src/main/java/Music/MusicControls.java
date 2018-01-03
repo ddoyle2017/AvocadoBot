@@ -8,16 +8,20 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.managers.AudioManager;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 class MusicControls
 {
-    private AudioPlayerManager playerManager;
-    private MusicManager       musicManager;
-    private MessageChannel     channel;
-    private AudioManager       manager;
-    private String             content;
-    private VoiceChannel       voiceChannel;
-    private static boolean     musicPlaying = false;
+    private AudioPlayerManager  playerManager;
+    private MusicManager        musicManager;
+    private MessageChannel      channel;
+    private AudioManager        manager;
+    private String              content;
+    private VoiceChannel        voiceChannel;
+    private static boolean      musicPlaying = false;
+    private static final String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
 
 
     MusicControls(MessageReceivedEvent event, AudioPlayerManager playerManager, MusicManager musicManager)
@@ -33,14 +37,18 @@ class MusicControls
 
     void playSong()
     {
-        String trackUrl = content.substring(content.lastIndexOf("play") + 5, content.length()).trim();
+        String songQuery = content.substring(content.lastIndexOf("play") + 5, content.length()).trim();
 
+        if (!isUrl(songQuery))
+        {
+            songQuery = buildYouTubeQuery(songQuery);
+        }
         if (!musicPlaying)
         {
             joinVoiceChannel();
             musicPlaying = true;
         }
-        playerManager.loadItemOrdered(musicManager, trackUrl, new MusicLoadResultHandler(musicManager, channel));
+        playerManager.loadItemOrdered(musicManager, songQuery, new MusicLoadResultHandler(musicManager, channel));
     }
 
     void stopSong()
@@ -143,13 +151,25 @@ class MusicControls
         }
     }
 
-    boolean isMusicPlaying()
+    private boolean isUrl(String songQuery)
     {
-        return musicPlaying;
+        Pattern pattern = Pattern.compile(URL_REGEX);
+        Matcher matcher = pattern.matcher(songQuery);
+        return matcher.find();
+    }
+
+    private String buildYouTubeQuery(String keyphrase)
+    {
+        return ("ytsearch:" + keyphrase);
     }
 
     private boolean isAudioConnected()
     {
         return (manager.getConnectionStatus() == ConnectionStatus.CONNECTED);
+    }
+
+    boolean isMusicPlaying()
+    {
+        return musicPlaying;
     }
 }

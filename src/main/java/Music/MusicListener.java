@@ -45,7 +45,7 @@ public class MusicListener extends ListenerAdapter
         {
             if (!musicControls.isMusicPlaying())
             {
-                channel.sendMessage(BotReply.MISSING_COMMAND).queue();
+                channel.sendMessage(BotReply.MISSING_SONG).queue();
             }
             else
             {

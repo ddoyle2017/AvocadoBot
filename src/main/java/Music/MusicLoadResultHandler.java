@@ -1,10 +1,12 @@
 package Music;
 
+import Resources.BotReply;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.core.entities.MessageChannel;
+import java.util.List;
 
 
 /**
@@ -28,7 +30,14 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
     @Override
     public void trackLoaded(AudioTrack track)
     {
-        channel.sendMessage("**Playing** :notes: `" + track.getInfo().title + "`").queue();
+        if (manager.getScheduler().getQueue().isEmpty())
+        {
+            channel.sendMessage("**Playing** :notes: `" + track.getInfo().title + "`").queue();
+        }
+        else
+        {
+            channel.sendMessage("**Added** `" + track.getInfo().title + "` **to queue** :musical_note:").queue();
+        }
         manager.getScheduler().queue(track);
     }
 
@@ -41,12 +50,19 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
     @Override
     public void noMatches()
     {
-
+        channel.sendMessage(BotReply.SONG_NOT_FOUND).queue();
     }
 
     @Override
     public void playlistLoaded(AudioPlaylist playlist)
     {
+        List<AudioTrack> tracks = playlist.getTracks();
+        AudioTrack currentTrack = playlist.getSelectedTrack();
 
+        if (currentTrack == null)   // If no track is currently selected, grab the first one from the queue
+        {
+            currentTrack = tracks.get(0);
+        }
+        manager.getScheduler().queue(currentTrack);
     }
 }

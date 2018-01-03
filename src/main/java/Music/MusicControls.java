@@ -151,6 +151,9 @@ class MusicControls
         }
     }
 
+    //
+    // Helper Functions
+    //
     private boolean isUrl(String songQuery)
     {
         Pattern pattern = Pattern.compile(URL_REGEX);

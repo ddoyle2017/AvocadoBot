@@ -18,7 +18,6 @@ import java.nio.file.Path;
  *  This code is based on Smbarbour's RavenBot, which can be found at:
  *  https://github.com/MCUpdater/RavenBot/blob/master/src/main/java/org/mcupdater/ravenbot/SettingsManager.java
  */
-
 public class SettingsManager
 {
     private static      SettingsManager instance;

@@ -20,7 +20,7 @@ public class AudioPlayerSendHandler implements AudioSendHandler
     private final AudioPlayer audioPlayer;
     private AudioFrame lastFrame;
 
-    public AudioPlayerSendHandler(AudioPlayer player)
+    AudioPlayerSendHandler(AudioPlayer player)
     {
         this.audioPlayer = player;
     }

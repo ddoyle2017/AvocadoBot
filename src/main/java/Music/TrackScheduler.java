@@ -19,7 +19,6 @@ import java.util.concurrent.LinkedBlockingQueue;
  *
  *   The results of events like pausing a song, resuming it, starting a song, exception handling,and a song stream getting stuck are all
  *   handled here.
- *
  */
 public class TrackScheduler extends AudioEventAdapter
 {
@@ -27,14 +26,12 @@ public class TrackScheduler extends AudioEventAdapter
     private final BlockingQueue<AudioTrack> queue;      // A blocking queue blocks adding items to the queue if its full, and blocks the removal
                                                         // of items when the queue is empty.
 
-
     TrackScheduler(AudioPlayer audioPlayer)
     {
         this.player = audioPlayer;
         this.queue  = new LinkedBlockingQueue<>();
     }
 
-    // If queue is empty, play track ASAP. Else, add the track to the queue
     public void queue(AudioTrack track)
     {
         if (!player.startTrack(track, true))
@@ -43,12 +40,15 @@ public class TrackScheduler extends AudioEventAdapter
         }
     }
 
-    // Force next track to play
     public void nextTrack()
     {
-        player.startTrack(queue.poll(), false);     // nointerrupt is false here because we want to force the next track to play
+        player.startTrack(queue.poll(), false);
     }
 
+    public BlockingQueue<AudioTrack> getQueue()
+    {
+        return queue;
+    }
 
     @Override
     public void onPlayerPause(AudioPlayer player)

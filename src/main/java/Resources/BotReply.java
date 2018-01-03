@@ -14,6 +14,7 @@ public final class BotReply
     public static final String SONG_RESUMED = "**Resuming** :play_pause:";
     public static final String SONG_ALREADY_PAUSED = ":x: **Player is already paused.**";
     public static final String SONG_NOT_PAUSED = ":x: **Player is not paused.**";
+    public static final String SONG_NOT_FOUND = ":x: **Could not find song.**";
     public static final String VOICE_CHANNEL_DISCONNECT = ":last_quarter_moon_with_face: **Successfully disconnected.**";
     public static final String NOT_IN_VOICE_CHANNEL = ":x: **I am not connected to a voice channel.**";
 }

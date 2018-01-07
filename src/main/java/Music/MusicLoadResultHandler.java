@@ -86,6 +86,7 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
         embedBuilder.setTitle(track.getInfo().title, track.getInfo().uri);
         embedBuilder.addField("Channel", track.getInfo().author, true);
         embedBuilder.addField("Duration", convertMSToTimeStamp(track.getInfo().length), true);
+        embedBuilder.setThumbnail(author.getAvatarUrl());
 
         return embedBuilder.build();
     }

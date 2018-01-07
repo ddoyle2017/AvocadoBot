@@ -19,7 +19,6 @@ import net.dv8tion.jda.core.managers.AudioManager;
  *
  * - An event listener for all bot commands relevant to music playing and audio. Calls the necessary
  *   functions to execute the given commands.
- *
  */
 public class MusicListener extends ListenerAdapter
 {
@@ -54,7 +53,7 @@ public class MusicListener extends ListenerAdapter
         }
         else if (content.startsWith("!avocado play") || content.startsWith("!a play"))
         {
-            musicControls.playSong();
+            musicControls.playSong(event.getAuthor());
         }
         else if (content.equals("!avocado stop") || content.equals("!a stop"))
         {

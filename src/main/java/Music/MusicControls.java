@@ -4,6 +4,7 @@ import Resources.BotReply;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import net.dv8tion.jda.core.audio.hooks.ConnectionStatus;
 import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.managers.AudioManager;
@@ -30,25 +31,25 @@ class MusicControls
         manager = event.getGuild().getAudioManager();
         content = event.getMessage().getContentDisplay();
         voiceChannel = event.getMember().getVoiceState().getChannel();
-
         this.playerManager = playerManager;
         this.musicManager  = musicManager;
     }
 
-    void playSong()
+    void playSong(User author)
     {
         String songQuery = content.substring(content.lastIndexOf("play") + 5, content.length()).trim();
 
-        if (!isUrl(songQuery))
-        {
-            songQuery = buildYouTubeQuery(songQuery);
-        }
         if (!musicPlaying)
         {
             joinVoiceChannel();
             musicPlaying = true;
         }
-        playerManager.loadItemOrdered(musicManager, songQuery, new MusicLoadResultHandler(musicManager, channel));
+        if (!isUrl(songQuery))
+        {
+            channel.sendMessage("**Searching for :mag_right:** `" + songQuery + "`").queue();
+            songQuery = buildYouTubeQuery(songQuery);
+        }
+        playerManager.loadItemOrdered(musicManager, songQuery, new MusicLoadResultHandler(musicManager, channel, author));
     }
 
     void stopSong()
@@ -151,6 +152,11 @@ class MusicControls
         }
     }
 
+    boolean isMusicPlaying()
+    {
+        return musicPlaying;
+    }
+
     //
     // Helper Functions
     //
@@ -169,10 +175,5 @@ class MusicControls
     private boolean isAudioConnected()
     {
         return (manager.getConnectionStatus() == ConnectionStatus.CONNECTED);
-    }
-
-    boolean isMusicPlaying()
-    {
-        return musicPlaying;
     }
 }

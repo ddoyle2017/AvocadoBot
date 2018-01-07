@@ -5,7 +5,12 @@ import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.entities.MessageEmbed;
+
+import java.awt.*;
+import java.util.Date;
 import java.util.List;
 
 
@@ -18,6 +23,9 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
 {
     private final MessageChannel channel;
     private final MusicManager   manager;
+    private final int SECONDS_IN_AN_HOUR = 3600;
+    private final int SECONDS_IN_A_MINUTE = 60;
+    private final int MS_IN_A_SECOND = 1000;
 
 
     MusicLoadResultHandler(MusicManager manager, MessageChannel channel)
@@ -52,6 +60,7 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
         channel.sendMessage(BotReply.SONG_NOT_FOUND).queue();
     }
 
+    // YouTube tracks are encapsulated in a playlist, so this method is the event listener for playing music found from YouTube queries
     @Override
     public void playlistLoaded(AudioPlaylist playlist)
     {
@@ -61,8 +70,57 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
         if (currentTrack == null)   // If no track is currently selected, grab the first one from the queue
         {
             currentTrack = tracks.get(0);
-            channel.sendMessage("**Playing** :notes: `" + tracks.get(0).getInfo().title + "`").queue();
+            channel.sendMessage(getTrackInfo(currentTrack)).queue();
         }
         manager.getScheduler().queue(currentTrack);
+    }
+
+    private MessageEmbed getTrackInfo(AudioTrack track)
+    {
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setColor(Color.GRAY);
+        //embedBuilder.setTitle(track.getInfo().title, track.getIdentifier());
+        embedBuilder.addField("Duration", convertMSToTimeStamp(track.getInfo().length), true);
+
+        return embedBuilder.build();
+    }
+
+    private String convertMSToTimeStamp(Long duration)
+    {
+        long durationInSeconds = duration / MS_IN_A_SECOND;
+
+        long hours = durationInSeconds / SECONDS_IN_AN_HOUR;
+        long minutes = (durationInSeconds / SECONDS_IN_A_MINUTE) % 60;
+        long seconds = durationInSeconds % 60;
+
+        String minString;
+        String secString;
+
+        if (seconds < 10)
+        {
+            secString = "0" + seconds;
+        }
+        else
+        {
+            secString = Long.toString(seconds);
+        }
+
+        if (hours > 0)
+        {
+            if (minutes < 10)
+            {
+                minString = "0" + minutes;
+            }
+            else
+            {
+                minString = Long.toString(minutes);
+            }
+            return (hours + ":" + minString + ":" + secString);
+        }
+        else
+        {
+            minString = Long.toString(minutes);
+            return (minString + ":" + secString);
+        }
     }
 }

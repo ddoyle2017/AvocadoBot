@@ -8,6 +8,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.MessageEmbed;
+import net.dv8tion.jda.core.entities.User;
 
 import java.awt.*;
 import java.util.Date;
@@ -23,15 +24,17 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
 {
     private final MessageChannel channel;
     private final MusicManager   manager;
+    private final User author;
     private final int SECONDS_IN_AN_HOUR = 3600;
     private final int SECONDS_IN_A_MINUTE = 60;
     private final int MS_IN_A_SECOND = 1000;
 
 
-    MusicLoadResultHandler(MusicManager manager, MessageChannel channel)
+    MusicLoadResultHandler(MusicManager manager, MessageChannel channel, User author)
     {
         this.channel  = channel;
         this.manager  = manager;
+        this.author   = author;
     }
 
     @Override
@@ -67,19 +70,21 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
         List<AudioTrack> tracks = playlist.getTracks();
         AudioTrack currentTrack = playlist.getSelectedTrack();
 
-        if (currentTrack == null)   // If no track is currently selected, grab the first one from the queue
+        if (currentTrack == null)
         {
             currentTrack = tracks.get(0);
-            channel.sendMessage(getTrackInfo(currentTrack)).queue();
+            channel.sendMessage(getTrackInfo(currentTrack, tracks.size())).queue();
         }
         manager.getScheduler().queue(currentTrack);
     }
 
-    private MessageEmbed getTrackInfo(AudioTrack track)
+    private MessageEmbed getTrackInfo(AudioTrack track, int queuePosition)
     {
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setColor(Color.GRAY);
-        //embedBuilder.setTitle(track.getInfo().title, track.getIdentifier());
+        embedBuilder.setColor(Color.DARK_GRAY);
+        embedBuilder.setAuthor("Added to queue", null, author.getAvatarUrl());
+        embedBuilder.setTitle(track.getInfo().title, track.getInfo().uri);
+        embedBuilder.addField("Channel", track.getInfo().author, true);
         embedBuilder.addField("Duration", convertMSToTimeStamp(track.getInfo().length), true);
 
         return embedBuilder.build();
@@ -88,7 +93,6 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
     private String convertMSToTimeStamp(Long duration)
     {
         long durationInSeconds = duration / MS_IN_A_SECOND;
-
         long hours = durationInSeconds / SECONDS_IN_AN_HOUR;
         long minutes = (durationInSeconds / SECONDS_IN_A_MINUTE) % 60;
         long seconds = durationInSeconds % 60;

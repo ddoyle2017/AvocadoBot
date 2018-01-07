@@ -4,6 +4,7 @@ import Resources.BotReply;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import net.dv8tion.jda.core.audio.hooks.ConnectionStatus;
 import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.managers.AudioManager;
@@ -34,7 +35,7 @@ class MusicControls
         this.musicManager  = musicManager;
     }
 
-    void playSong()
+    void playSong(User author)
     {
         String songQuery = content.substring(content.lastIndexOf("play") + 5, content.length()).trim();
 
@@ -47,7 +48,7 @@ class MusicControls
             joinVoiceChannel();
             musicPlaying = true;
         }
-        playerManager.loadItemOrdered(musicManager, songQuery, new MusicLoadResultHandler(musicManager, channel));
+        playerManager.loadItemOrdered(musicManager, songQuery, new MusicLoadResultHandler(musicManager, channel, author));
     }
 
     void stopSong()

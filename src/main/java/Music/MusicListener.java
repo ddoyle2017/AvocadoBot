@@ -53,7 +53,7 @@ public class MusicListener extends ListenerAdapter
         }
         else if (content.startsWith("!avocado play") || content.startsWith("!a play"))
         {
-            musicControls.playSong();
+            musicControls.playSong(event.getAuthor());
         }
         else if (content.equals("!avocado stop") || content.equals("!a stop"))
         {

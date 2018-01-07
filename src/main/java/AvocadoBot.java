@@ -45,7 +45,7 @@ public class AvocadoBot extends ListenerAdapter
         }
     }
 
-    public static JDA getAPI ()
+    public static JDA getAPI()
     {
         if (api == null)
             setUpBot();

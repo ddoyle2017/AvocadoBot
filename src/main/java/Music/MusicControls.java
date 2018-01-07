@@ -30,7 +30,6 @@ class MusicControls
         manager = event.getGuild().getAudioManager();
         content = event.getMessage().getContentDisplay();
         voiceChannel = event.getMember().getVoiceState().getChannel();
-
         this.playerManager = playerManager;
         this.musicManager  = musicManager;
     }
@@ -151,6 +150,11 @@ class MusicControls
         }
     }
 
+    boolean isMusicPlaying()
+    {
+        return musicPlaying;
+    }
+
     //
     // Helper Functions
     //
@@ -169,10 +173,5 @@ class MusicControls
     private boolean isAudioConnected()
     {
         return (manager.getConnectionStatus() == ConnectionStatus.CONNECTED);
-    }
-
-    boolean isMusicPlaying()
-    {
-        return musicPlaying;
     }
 }

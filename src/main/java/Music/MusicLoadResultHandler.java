@@ -13,7 +13,6 @@ import java.util.List;
  * MusicLoadResultHandler
  *
  * - Handles the results of the TrackScheduler's actions on the tracks.
- *
  */
 public class MusicLoadResultHandler implements AudioLoadResultHandler
 {
@@ -62,6 +61,7 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
         if (currentTrack == null)   // If no track is currently selected, grab the first one from the queue
         {
             currentTrack = tracks.get(0);
+            channel.sendMessage("**Playing** :notes: `" + tracks.get(0).getInfo().title + "`").queue();
         }
         manager.getScheduler().queue(currentTrack);
     }

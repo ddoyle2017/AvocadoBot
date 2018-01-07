@@ -39,14 +39,15 @@ class MusicControls
     {
         String songQuery = content.substring(content.lastIndexOf("play") + 5, content.length()).trim();
 
-        if (!isUrl(songQuery))
-        {
-            songQuery = buildYouTubeQuery(songQuery);
-        }
         if (!musicPlaying)
         {
             joinVoiceChannel();
             musicPlaying = true;
+        }
+        if (!isUrl(songQuery))
+        {
+            channel.sendMessage("**Searching for :mag_right:** `" + songQuery + "`").queue();
+            songQuery = buildYouTubeQuery(songQuery);
         }
         playerManager.loadItemOrdered(musicManager, songQuery, new MusicLoadResultHandler(musicManager, channel, author));
     }

@@ -99,27 +99,11 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
         long seconds = durationInSeconds % 60;
 
         String minString;
-        String secString;
-
-        if (seconds < 10)
-        {
-            secString = "0" + seconds;
-        }
-        else
-        {
-            secString = Long.toString(seconds);
-        }
+        String secString = (seconds < 10) ? ("0" + seconds) : Long.toString(seconds);
 
         if (hours > 0)
         {
-            if (minutes < 10)
-            {
-                minString = "0" + minutes;
-            }
-            else
-            {
-                minString = Long.toString(minutes);
-            }
+            minString = (minutes < 10) ? ("0" + minutes) : Long.toString(minutes);
             return (hours + ":" + minString + ":" + secString);
         }
         else

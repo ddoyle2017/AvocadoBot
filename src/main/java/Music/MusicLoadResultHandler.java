@@ -2,9 +2,13 @@ package Music;
 
 import Resources.BotReply;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack;
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeFormatInfo;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.MessageEmbed;
@@ -27,6 +31,7 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
     private final User author;
     private final int SECONDS_IN_AN_HOUR = 3600;
     private final int SECONDS_IN_A_MINUTE = 60;
+    private final int MINUTES_IN_AN_HOUR = 60;
     private final int MS_IN_A_SECOND = 1000;
 
 
@@ -86,7 +91,9 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
         embedBuilder.setTitle(track.getInfo().title, track.getInfo().uri);
         embedBuilder.addField("Channel", track.getInfo().author, true);
         embedBuilder.addField("Duration", convertMSToTimeStamp(track.getInfo().length), true);
-        embedBuilder.setThumbnail(author.getAvatarUrl());
+        embedBuilder.addField("Filler", "fill", true);
+        embedBuilder.addField("Position in queue", Integer.toString(queuePosition), true);
+        embedBuilder.setThumbnail(getYouTubeVideoThumbnail(track.getIdentifier()));
 
         return embedBuilder.build();
     }
@@ -95,8 +102,8 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
     {
         long durationInSeconds = duration / MS_IN_A_SECOND;
         long hours = durationInSeconds / SECONDS_IN_AN_HOUR;
-        long minutes = (durationInSeconds / SECONDS_IN_A_MINUTE) % 60;
-        long seconds = durationInSeconds % 60;
+        long minutes = (durationInSeconds / SECONDS_IN_A_MINUTE) % MINUTES_IN_AN_HOUR;
+        long seconds = durationInSeconds % SECONDS_IN_A_MINUTE;
 
         String minString;
         String secString = (seconds < 10) ? ("0" + seconds) : Long.toString(seconds);
@@ -111,5 +118,11 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
             minString = Long.toString(minutes);
             return (minString + ":" + secString);
         }
+    }
+
+    // from the YouTube API documentation
+    private String getYouTubeVideoThumbnail(String videoID)
+    {
+        return "http://img.youtube.com/vi/" + videoID +"/0.jpg";
     }
 }

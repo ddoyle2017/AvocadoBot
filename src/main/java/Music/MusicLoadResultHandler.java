@@ -24,6 +24,7 @@ import java.util.List;
  *
  * - Handles the results of the TrackScheduler's actions on the tracks.
  */
+@SuppressWarnings("FieldCanBeLocal")
 public class MusicLoadResultHandler implements AudioLoadResultHandler
 {
     private final MessageChannel channel;

@@ -39,7 +39,7 @@ public class AvocadoBot extends ListenerAdapter
             api.addEventListener(new GeneralListener());
             api.addEventListener(new MusicListener());
         }
-        catch (LoginException | RateLimitedException | NullPointerException ex)
+        catch (LoginException | NullPointerException ex)
         {
             ex.printStackTrace();
         }
@@ -48,7 +48,9 @@ public class AvocadoBot extends ListenerAdapter
     public static JDA getAPI()
     {
         if (api == null)
+        {
             setUpBot();
+        }
         return api;
     }
 }

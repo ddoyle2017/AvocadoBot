@@ -1,18 +1,14 @@
 package Music;
-import Resources.BotReply;
 
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
-import net.dv8tion.jda.core.audio.hooks.ConnectionStatus;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
-import net.dv8tion.jda.core.managers.AudioManager;
 
+import static Resources.BotReply.MISSING_SONG;
 
 /**
  * MusicListener Class
@@ -44,7 +40,7 @@ public class MusicListener extends ListenerAdapter
         {
             if (!musicControls.isMusicPlaying())
             {
-                channel.sendMessage(BotReply.MISSING_SONG).queue();
+                channel.sendMessage(MISSING_SONG).queue();
             }
             else
             {

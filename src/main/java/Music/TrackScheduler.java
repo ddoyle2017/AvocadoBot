@@ -23,32 +23,47 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class TrackScheduler extends AudioEventAdapter
 {
     private final AudioPlayer player;
-    private final BlockingQueue<AudioTrack> queue;      // A blocking queue blocks adding items to the queue if its full, and blocks the removal
-                                                        // of items when the queue is empty.
+    private final BlockingQueue<AudioTrack> queue;
+    private int tracksInQueue;
 
-    TrackScheduler(AudioPlayer audioPlayer)
+
+    public TrackScheduler(AudioPlayer audioPlayer)
     {
         this.player = audioPlayer;
         this.queue  = new LinkedBlockingQueue<>();
+        tracksInQueue = 0;
     }
 
-    public void queue(AudioTrack track)
+    public boolean queue(AudioTrack track)
     {
-        if (!player.startTrack(track, true))
+        if (!player.startTrack(track, true) && track != null)
         {
-            queue.offer(track);
+            if (queue.offer(track))
+            {
+                tracksInQueue++;
+                System.out.println("Playing" + track.getInfo().title);
+                return true;
+            }
         }
+        return false;
     }
 
-    public void nextTrack()
+    // force next track to play
+    public boolean nextTrack()
     {
-        player.startTrack(queue.poll(), false);
+        return player.startTrack(queue.poll(), false);
     }
 
     public BlockingQueue<AudioTrack> getQueue()
     {
         return queue;
     }
+
+    public int getTracksInQueue()
+    {
+        return tracksInQueue;
+    }
+
 
     @Override
     public void onPlayerPause(AudioPlayer player)
@@ -75,6 +90,7 @@ public class TrackScheduler extends AudioEventAdapter
         {
             nextTrack();
         }
+        tracksInQueue--;
     }
 
     @Override

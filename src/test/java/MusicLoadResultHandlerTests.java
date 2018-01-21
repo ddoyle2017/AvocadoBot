@@ -12,8 +12,6 @@ import net.dv8tion.jda.core.utils.SessionController;
 import net.dv8tion.jda.core.utils.SessionControllerAdapter;
 import okhttp3.OkHttpClient;
 import org.junit.*;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -22,7 +20,6 @@ import static org.junit.Assert.*;
 
 
 @SuppressWarnings("FieldCanBeLocal")
-@RunWith(Parameterized.class)
 public class MusicLoadResultHandlerTests
 {
     private MessageChannel channel;
@@ -63,6 +60,4 @@ public class MusicLoadResultHandlerTests
         manager = null;
         author  = null;
     }
-
-
 }

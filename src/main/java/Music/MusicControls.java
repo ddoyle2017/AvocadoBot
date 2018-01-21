@@ -1,6 +1,5 @@
 package Music;
 
-import Resources.BotReply;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import net.dv8tion.jda.core.audio.hooks.ConnectionStatus;
 import net.dv8tion.jda.core.entities.MessageChannel;
@@ -8,9 +7,10 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.managers.AudioManager;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static Resources.BotReply.*;
 
 
 class MusicControls
@@ -56,15 +56,15 @@ class MusicControls
     {
         if (!isAudioConnected())
         {
-            channel.sendMessage(BotReply.MISSING_VOICE_CHANNEL).queue();
+            channel.sendMessage(MISSING_VOICE_CHANNEL).queue();
         }
         else if (!musicPlaying)
         {
-            channel.sendMessage(BotReply.NOTHING_IS_PLAYING).queue();
+            channel.sendMessage(NOTHING_IS_PLAYING).queue();
         }
         else
         {
-            channel.sendMessage(BotReply.SONG_STOPPED).queue();
+            channel.sendMessage(SONG_STOPPED).queue();
             musicPlaying = false;
             musicManager.getPlayer().stopTrack();
             leaveVoiceChannel();
@@ -75,15 +75,15 @@ class MusicControls
     {
         if (!isAudioConnected())
         {
-            channel.sendMessage(BotReply.MISSING_VOICE_CHANNEL).queue();
+            channel.sendMessage(MISSING_VOICE_CHANNEL).queue();
         }
         else if (!musicPlaying)
         {
-            channel.sendMessage(BotReply.NOTHING_IS_PLAYING).queue();
+            channel.sendMessage(NOTHING_IS_PLAYING).queue();
         }
         else
         {
-            channel.sendMessage(BotReply.SONG_SKIPPED).queue();
+            channel.sendMessage(SONG_SKIPPED).queue();
             musicManager.getScheduler().nextTrack();
         }
     }
@@ -92,19 +92,19 @@ class MusicControls
     {
         if (!isAudioConnected())
         {
-            channel.sendMessage(BotReply.MISSING_VOICE_CHANNEL).queue();
+            channel.sendMessage(MISSING_VOICE_CHANNEL).queue();
         }
         else if (!musicPlaying)
         {
-            channel.sendMessage(BotReply.NOTHING_IS_PLAYING).queue();
+            channel.sendMessage(NOTHING_IS_PLAYING).queue();
         }
         else if (musicManager.getPlayer().isPaused())
         {
-            channel.sendMessage(BotReply.SONG_ALREADY_PAUSED).queue();
+            channel.sendMessage(SONG_ALREADY_PAUSED).queue();
         }
         else
         {
-            channel.sendMessage(BotReply.SONG_PAUSED).queue();
+            channel.sendMessage(SONG_PAUSED).queue();
             musicManager.getPlayer().setPaused(true);
         }
     }
@@ -113,16 +113,16 @@ class MusicControls
     {
         if (!isAudioConnected())
         {
-            channel.sendMessage(BotReply.MISSING_VOICE_CHANNEL).queue();
+            channel.sendMessage(MISSING_VOICE_CHANNEL).queue();
         }
         else if (musicManager.getPlayer().isPaused())
         {
-            channel.sendMessage(BotReply.SONG_RESUMED).queue();
+            channel.sendMessage(SONG_RESUMED).queue();
             musicManager.getPlayer().setPaused(false);
         }
         else
         {
-            channel.sendMessage(BotReply.SONG_NOT_PAUSED).queue();
+            channel.sendMessage(SONG_NOT_PAUSED).queue();
         }
     }
 
@@ -130,7 +130,7 @@ class MusicControls
     {
         if (voiceChannel == null)
         {
-            channel.sendMessage(BotReply.MISSING_VOICE_CHANNEL).queue();
+            channel.sendMessage(MISSING_VOICE_CHANNEL).queue();
         }
         else if (!isAudioConnected())
         {
@@ -144,11 +144,11 @@ class MusicControls
         if (isAudioConnected())
         {
             manager.closeAudioConnection();
-            channel.sendMessage(BotReply.VOICE_CHANNEL_DISCONNECT).queue();
+            channel.sendMessage(VOICE_CHANNEL_DISCONNECT).queue();
         }
         else
         {
-            channel.sendMessage(BotReply.NOT_IN_VOICE_CHANNEL).queue();
+            channel.sendMessage(NOT_IN_VOICE_CHANNEL).queue();
         }
     }
 

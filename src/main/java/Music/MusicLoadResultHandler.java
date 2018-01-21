@@ -2,20 +2,15 @@ package Music;
 
 import Resources.BotReply;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
-import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
-import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack;
-import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeFormatInfo;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.User;
 
 import java.awt.*;
-import java.util.Date;
 import java.util.List;
 
 
@@ -38,11 +33,12 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
 
     MusicLoadResultHandler(MusicManager manager, MessageChannel channel, User author)
     {
-        this.channel  = channel;
-        this.manager  = manager;
-        this.author   = author;
+        this.channel = channel;
+        this.manager = manager;
+        this.author  = author;
     }
 
+    // called when a URL is provided
     @Override
     public void trackLoaded(AudioTrack track)
     {
@@ -54,7 +50,11 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
         {
             channel.sendMessage("**Added** `" + track.getInfo().title + "` **to queue** :musical_note:").queue();
         }
-        manager.getScheduler().queue(track);
+
+        if (!manager.getScheduler().queue(track))
+        {
+            channel.sendMessage(":x: **Failed to add** `" + track.getInfo().title + "` **to the queue**").queue();
+        }
     }
 
     @Override
@@ -69,22 +69,25 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
         channel.sendMessage(BotReply.SONG_NOT_FOUND).queue();
     }
 
-    // YouTube tracks are encapsulated in a playlist, so this method is the event listener for playing music found from YouTube queries
+    // called when a keyphrase for a YouTube search is provided
     @Override
     public void playlistLoaded(AudioPlaylist playlist)
     {
         List<AudioTrack> tracks = playlist.getTracks();
         AudioTrack currentTrack = playlist.getSelectedTrack();
+        int tracksInQueue = manager.getScheduler().getTracksInQueue();
 
         if (currentTrack == null)
         {
             currentTrack = tracks.get(0);
-            channel.sendMessage(getTrackInfo(currentTrack, tracks.size())).queue();
         }
         manager.getScheduler().queue(currentTrack);
+
+        String queuePosition = (tracksInQueue == 0) ? ("**Currently playing**") : Integer.toString(tracksInQueue);
+        channel.sendMessage(getTrackInfo(currentTrack, queuePosition)).queue();
     }
 
-    private MessageEmbed getTrackInfo(AudioTrack track, int queuePosition)
+    private MessageEmbed getTrackInfo(AudioTrack track, String queuePosition)
     {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setColor(Color.DARK_GRAY);
@@ -93,7 +96,7 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
         embedBuilder.addField("Channel", track.getInfo().author, true);
         embedBuilder.addField("Duration", convertMSToTimeStamp(track.getInfo().length), true);
         embedBuilder.addField("Filler", "fill", true);
-        embedBuilder.addField("Position in queue", Integer.toString(queuePosition), true);
+        embedBuilder.addField("Position in queue", queuePosition, true);
         embedBuilder.setThumbnail(getYouTubeVideoThumbnail(track.getIdentifier()));
 
         return embedBuilder.build();

@@ -16,7 +16,7 @@ public class MusicManager
     private final TrackScheduler scheduler;
 
 
-    MusicManager(AudioPlayerManager manager)
+    public MusicManager(AudioPlayerManager manager)
     {
         player = manager.createPlayer();
         scheduler = new TrackScheduler(player);

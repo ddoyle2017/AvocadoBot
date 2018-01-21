@@ -24,5 +24,5 @@ public final class TestValues
     public static final int MY_USER_ID = 2;
     public static final int CORE_POOL_SIZE = 10;
     public static final int MAX_RECONNECT_DELAY = 100;
-    public static final long TRACK_LENGTH = 60;
+    public static final long TRACK_LENGTH = 291000;
 }

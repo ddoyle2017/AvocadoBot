@@ -32,12 +32,11 @@ public class TrackScheduler extends AudioEventAdapter
         this.player = audioPlayer;
         this.queue  = new LinkedBlockingQueue<>();
         tracksInQueue = 0;
-        System.out.println("I got called");
     }
 
     public boolean queue(AudioTrack track)
     {
-        if (!player.startTrack(track, true))
+        if (!player.startTrack(track, true) && track != null)
         {
             if (queue.offer(track))
             {
@@ -49,9 +48,10 @@ public class TrackScheduler extends AudioEventAdapter
         return false;
     }
 
-    public void nextTrack()
+    // force next track to play
+    public boolean nextTrack()
     {
-        player.startTrack(queue.poll(), false);
+        return player.startTrack(queue.poll(), false);
     }
 
     public BlockingQueue<AudioTrack> getQueue()
@@ -63,6 +63,7 @@ public class TrackScheduler extends AudioEventAdapter
     {
         return tracksInQueue;
     }
+
 
     @Override
     public void onPlayerPause(AudioPlayer player)

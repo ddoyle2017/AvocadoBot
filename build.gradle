@@ -7,7 +7,7 @@ plugins {
 mainClassName = 'AvocadoBot'
 
 version '1.0'
-def jdaVersion = '3.5.0_328'
+def jdaVersion = '3.5.0_329'
 
 sourceCompatibility = 1.8
 

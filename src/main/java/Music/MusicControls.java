@@ -39,6 +39,11 @@ class MusicControls
     {
         String songQuery = content.substring(content.lastIndexOf("play") + 5, content.length()).trim();
 
+//        if (!isAudioConnected())
+//        {
+//            channel.sendMessage(MISSING_VOICE_CHANNEL).queue();
+//            return;
+//        }
         if (!musicPlaying)
         {
             joinVoiceChannel();

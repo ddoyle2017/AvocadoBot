@@ -39,14 +39,9 @@ class MusicControls
     {
         String songQuery = content.substring(content.lastIndexOf("play") + 5, content.length()).trim();
 
-//        if (!isAudioConnected())
-//        {
-//            channel.sendMessage(MISSING_VOICE_CHANNEL).queue();
-//            return;
-//        }
         if (!musicPlaying)
         {
-            joinVoiceChannel();
+            if (!joinVoiceChannel()) return;
             musicPlaying = true;
         }
         if (!isUrl(songQuery))
@@ -131,16 +126,18 @@ class MusicControls
         }
     }
 
-    void joinVoiceChannel()
+    boolean joinVoiceChannel()
     {
-        if (voiceChannel == null)
-        {
-            channel.sendMessage(MISSING_VOICE_CHANNEL).queue();
-        }
-        else if (!isAudioConnected())
+        if (!isAudioConnected() && voiceChannel != null)
         {
             manager.openAudioConnection(voiceChannel);
             channel.sendMessage(":ok_hand: **Joined** `" + voiceChannel.getName() + "`").queue();
+            return true;
+        }
+        else
+        {
+            channel.sendMessage(MISSING_VOICE_CHANNEL).queue();
+            return false;
         }
     }
 
@@ -162,9 +159,7 @@ class MusicControls
         return musicPlaying;
     }
 
-    //
-    // Helper Functions
-    //
+
     private boolean isUrl(String songQuery)
     {
         Pattern pattern = Pattern.compile(URL_REGEX);

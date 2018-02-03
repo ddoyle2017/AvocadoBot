@@ -36,11 +36,11 @@ public class TrackScheduler extends AudioEventAdapter
 
     public boolean queue(AudioTrack track)
     {
+        tracksInQueue++;
         if (!player.startTrack(track, true) && track != null)
         {
             if (queue.offer(track))
             {
-                tracksInQueue++;
                 System.out.println("Playing" + track.getInfo().title);
                 return true;
             }
@@ -90,7 +90,7 @@ public class TrackScheduler extends AudioEventAdapter
         {
             nextTrack();
         }
-        tracksInQueue--;
+        if (tracksInQueue >= 0) tracksInQueue--;
     }
 
     @Override

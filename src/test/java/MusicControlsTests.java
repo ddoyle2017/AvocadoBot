@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import static Resources.TestValues.*;
 
+
 @SuppressWarnings("FieldCanBeLocal")
 public class MusicControlsTests
 {

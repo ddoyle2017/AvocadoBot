@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 import static Resources.BotReply.*;
 
 
-class MusicControls
+public class MusicControls
 {
     private AudioPlayerManager  playerManager;
     private MusicManager        musicManager;
@@ -25,7 +25,7 @@ class MusicControls
     private static final String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
 
 
-    MusicControls(MessageReceivedEvent event, AudioPlayerManager playerManager, MusicManager musicManager)
+    public MusicControls(MessageReceivedEvent event, AudioPlayerManager playerManager, MusicManager musicManager)
     {
         channel = event.getChannel();
         manager = event.getGuild().getAudioManager();
@@ -41,7 +41,7 @@ class MusicControls
 
         if (!musicPlaying)
         {
-            joinVoiceChannel();
+            if (!joinVoiceChannel()) return;
             musicPlaying = true;
         }
         if (!isUrl(songQuery))
@@ -126,16 +126,18 @@ class MusicControls
         }
     }
 
-    void joinVoiceChannel()
+    boolean joinVoiceChannel()
     {
-        if (voiceChannel == null)
-        {
-            channel.sendMessage(MISSING_VOICE_CHANNEL).queue();
-        }
-        else if (!isAudioConnected())
+        if (!isAudioConnected() && voiceChannel != null)
         {
             manager.openAudioConnection(voiceChannel);
             channel.sendMessage(":ok_hand: **Joined** `" + voiceChannel.getName() + "`").queue();
+            return true;
+        }
+        else
+        {
+            channel.sendMessage(MISSING_VOICE_CHANNEL).queue();
+            return false;
         }
     }
 
@@ -157,10 +159,8 @@ class MusicControls
         return musicPlaying;
     }
 
-    //
-    // Helper Functions
-    //
-    private boolean isUrl(String songQuery)
+
+    public boolean isUrl(String songQuery)
     {
         Pattern pattern = Pattern.compile(URL_REGEX);
         Matcher matcher = pattern.matcher(songQuery);

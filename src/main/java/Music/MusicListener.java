@@ -13,8 +13,8 @@ import static Resources.BotReply.MISSING_SONG;
 /**
  * MusicListener Class
  *
- * - An event listener for all bot commands relevant to music playing and audio. Calls the necessary
- *   functions to execute the given commands.
+ * An event listener for all bot commands relevant to music playing and audio. Calls the necessary
+ * functions to execute the given commands.
  */
 public class MusicListener extends ListenerAdapter
 {
@@ -25,7 +25,7 @@ public class MusicListener extends ListenerAdapter
     @Override
     public void onMessageReceived(MessageReceivedEvent event)
     {
-        if (event.getAuthor().isBot()) return;                          // block other bots from giving AvocadoBot commands
+        if (event.getAuthor().isBot()) return;
         if (!event.getMessage().isFromType(ChannelType.TEXT)) return;   // we only accept messages from a text channel (no DMs)
 
         MessageChannel  channel = event.getChannel();

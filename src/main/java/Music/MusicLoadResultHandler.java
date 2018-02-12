@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * MusicLoadResultHandler
  *
- * - Handles the results of the TrackScheduler's actions on the tracks.
+ * Handles the results of the TrackScheduler's actions on the tracks.
  */
 @SuppressWarnings("FieldCanBeLocal")
 public class MusicLoadResultHandler implements AudioLoadResultHandler
@@ -50,11 +50,6 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
         {
             channel.sendMessage("**Added** `" + track.getInfo().title + "` **to queue** :musical_note:").queue();
         }
-
-        if (!manager.getScheduler().queue(track))
-        {
-            channel.sendMessage(":x: **Failed to add** `" + track.getInfo().title + "` **to the queue**").queue();
-        }
     }
 
     @Override
@@ -82,8 +77,7 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
             currentTrack = tracks.get(0);
         }
         manager.getScheduler().queue(currentTrack);
-
-        String queuePosition = (tracksInQueue == 0) ? ("**Currently playing**") : Integer.toString(tracksInQueue);
+        String queuePosition = (tracksInQueue <= 0) ? ("**Currently playing**") : Integer.toString(tracksInQueue);
         channel.sendMessage(getTrackInfo(currentTrack, queuePosition)).queue();
     }
 
@@ -95,7 +89,7 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
         embedBuilder.setTitle(track.getInfo().title, track.getInfo().uri);
         embedBuilder.addField("Channel", track.getInfo().author, true);
         embedBuilder.addField("Duration", convertMSToTimeStamp(track.getInfo().length), true);
-        embedBuilder.addField("Filler", "fill", true);
+        embedBuilder.addField("Requested by", author.getName(), true);
         embedBuilder.addField("Position in queue", queuePosition, true);
         embedBuilder.setThumbnail(getYouTubeVideoThumbnail(track.getIdentifier()));
 

@@ -1,8 +1,7 @@
-import Music.MusicListener;
+import Music.MusicCommandListener;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import javax.security.auth.login.LoginException;
@@ -35,8 +34,8 @@ public class AvocadoBot extends ListenerAdapter
                     .setToken(settings.getBotToken())
                     .buildAsync();
 
-            api.addEventListener(new GeneralListener());
-            api.addEventListener(new MusicListener());
+            api.addEventListener(new GeneralCommandListener());
+            api.addEventListener(new MusicCommandListener());
         }
         catch (LoginException | NullPointerException ex)
         {

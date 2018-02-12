@@ -11,12 +11,12 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import static Resources.BotReply.MISSING_SONG;
 
 /**
- * MusicListener Class
+ * MusicCommandListener Class
  *
  * An event listener for all bot commands relevant to music playing and audio. Calls the necessary
  * functions to execute the given commands.
  */
-public class MusicListener extends ListenerAdapter
+public class MusicCommandListener extends ListenerAdapter
 {
     private AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
     private MusicManager       musicManager  = new MusicManager(playerManager);

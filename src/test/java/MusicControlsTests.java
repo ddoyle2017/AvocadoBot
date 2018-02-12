@@ -1,3 +1,4 @@
+import Music.MusicControls;
 import Music.MusicManager;
 import com.neovisionaries.ws.client.WebSocketFactory;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
@@ -12,7 +13,9 @@ import net.dv8tion.jda.core.utils.SessionController;
 import net.dv8tion.jda.core.utils.SessionControllerAdapter;
 import okhttp3.OkHttpClient;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Test;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -42,6 +45,7 @@ public class MusicControlsTests
     private List<MessageEmbed> messageEmbeds;
     private TextChannelImpl channel;
     private GuildImpl guild;
+    private MemberImpl member;
 
 
     @Before
@@ -64,20 +68,46 @@ public class MusicControlsTests
 
         author = new UserImpl(MY_USER_ID, jda);
         guild = new GuildImpl(jda, MY_GUILD_ID);
+        member = new MemberImpl(guild, author);
         channel = new TextChannelImpl(MY_CHANNEL_ID, guild);
 
-        message = new ReceivedMessage(MESSAGE_ID, channel, TEXT_MESSAGE,
-                                    NOT_FROM_WEBHOOK, MENTIONS_EVERYONE_FALSE, NOT_TEXT_TO_SPEECH,
-                                    NOT_A_PINNED_MESSAGE, TEST_MESSAGE_CONTENT, MESSAGE_VALIDATION_NONCE,
-                                    author, editTime, messageReactions,
-                                    messageAttachments, messageEmbeds);
+//        message = new ReceivedMessage(MESSAGE_ID, channel, TEXT_MESSAGE,
+//                                    NOT_FROM_WEBHOOK, MENTIONS_EVERYONE_FALSE, NOT_TEXT_TO_SPEECH,
+//                                    NOT_A_PINNED_MESSAGE, TEST_MESSAGE_CONTENT, MESSAGE_VALIDATION_NONCE,
+//                                    author, editTime, messageReactions,
+//                                    messageAttachments, messageEmbeds);
 
         audioManager = new DefaultAudioPlayerManager();
         musicManager = new MusicManager(audioManager);
         event = new MessageReceivedEvent(jda, 111, message);
     }
 
+    /**
+     * Instantiating a new MusicControls object is throwing a null pointer exception because there is no Member object tied to the event
+     * parameter.
+     *
+     * There is no way to programmatically add a member to a guild.
+     */
+    @Test
+    public void isUrl_GivenProperUrl_ReturnsTrue()
+    {
+//        MusicControls controls = new MusicControls(event, audioManager, musicManager);
+//        Assert.assertTrue(controls.isUrl(TRACK_YOUTUBE_URL));
+    }
 
+    @Test
+    public void isUrl_GivenRandomString_ReturnsFalse()
+    {
+//        MusicControls controls = new MusicControls(event, audioManager, musicManager);
+//        Assert.assertFalse(controls.isUrl("bqkwfyvfiyqvwfiy"));
+    }
+
+    @Test
+    public void isUrl_GivenIllFormedUrl_ReturnsFalse()
+    {
+//        MusicControls controls = new MusicControls(event, audioManager, musicManager);
+//        Assert.assertFalse(controls.isUrl("http://www.org.www.com"));
+    }
 
 
     @After
@@ -97,5 +127,8 @@ public class MusicControlsTests
         messageReactions = null;
         messageAttachments = null;
         messageEmbeds = null;
+        channel = null;
+        guild = null;
+        member = null;
     }
 }

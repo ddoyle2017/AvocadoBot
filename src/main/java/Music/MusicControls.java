@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 import static Resources.BotReply.*;
 
 
-class MusicControls
+public class MusicControls
 {
     private AudioPlayerManager  playerManager;
     private MusicManager        musicManager;
@@ -25,7 +25,7 @@ class MusicControls
     private static final String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
 
 
-    MusicControls(MessageReceivedEvent event, AudioPlayerManager playerManager, MusicManager musicManager)
+    public MusicControls(MessageReceivedEvent event, AudioPlayerManager playerManager, MusicManager musicManager)
     {
         channel = event.getChannel();
         manager = event.getGuild().getAudioManager();
@@ -160,7 +160,7 @@ class MusicControls
     }
 
 
-    private boolean isUrl(String songQuery)
+    public boolean isUrl(String songQuery)
     {
         Pattern pattern = Pattern.compile(URL_REGEX);
         Matcher matcher = pattern.matcher(songQuery);

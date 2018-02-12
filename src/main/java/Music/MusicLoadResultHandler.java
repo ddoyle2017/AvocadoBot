@@ -89,7 +89,7 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
         embedBuilder.setTitle(track.getInfo().title, track.getInfo().uri);
         embedBuilder.addField("Channel", track.getInfo().author, true);
         embedBuilder.addField("Duration", convertMSToTimeStamp(track.getInfo().length), true);
-        embedBuilder.addField("Filler", "fill", true);
+        embedBuilder.addField("Requested by", author.getName(), true);
         embedBuilder.addField("Position in queue", queuePosition, true);
         embedBuilder.setThumbnail(getYouTubeVideoThumbnail(track.getIdentifier()));
 

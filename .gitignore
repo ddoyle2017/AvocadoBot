@@ -11,6 +11,7 @@
 
 # AvocadoBot #
 auth.json
+imgur.json
 
 # macOS #
 .DS_Store

@@ -9,13 +9,13 @@ import java.awt.*;
 
 
 /**
- * GeneralListener Class
+ * GeneralCommandListener Class
  *
  *  - An event listener for AvocadoBot. Handles all "general" commands to the bot that aren't specific to a feature, e.g. providing a command
  *    list or checking to see if a command was properly given.
  *
  */
-public class GeneralListener extends ListenerAdapter
+public class GeneralCommandListener extends ListenerAdapter
 {
 
     @Override

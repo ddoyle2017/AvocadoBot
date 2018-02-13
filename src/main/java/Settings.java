@@ -13,11 +13,6 @@ public class Settings
 {
     private String botToken;
 
-    public void setBotToken(String token)
-    {
-        this.botToken = token;
-    }
-
     public String getBotToken()
     {
         return botToken;

@@ -41,7 +41,7 @@ public class TrackScheduler extends AudioEventAdapter
         {
             if (queue.offer(track))
             {
-                System.out.println("Playing" + track.getInfo().title);
+                System.out.println("Playing " + track.getInfo().title);
                 return true;
             }
         }

@@ -28,3 +28,7 @@ A clean and full wrapping of the Discord RESTful API and its Websocket-Events fo
 ### [LavaPlayer](https://github.com/sedmelluq/LavaPlayer#lavaplayer---audio-player-library-for-discord)
 
 An audio player library for Java that loads tracks and converts them into a stream of Opus frames.
+
+### [Imgur API](https://apidocs.imgur.com/)
+
+Imgur's official RESTful API for programmatically accessing the entire Imgur infrastructure, based on HTTP requests and JSON responses. Imgur is an online image sharing community and image hosting website. 

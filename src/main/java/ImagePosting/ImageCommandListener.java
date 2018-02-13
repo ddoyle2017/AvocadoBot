@@ -7,6 +7,9 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.io.IOException;
 
+import static Resources.BotReply.*;
+
+
 public class ImageCommandListener extends ListenerAdapter
 {
     @Override
@@ -27,12 +30,14 @@ public class ImageCommandListener extends ListenerAdapter
         catch (IOException ex)
         {
             System.err.println(ex.getMessage());
+            channel.sendMessage(CANT_CONNECT_WITH_IMGUR).queue();
             return;
         }
 
         if (content.equals("!a wallpaper") || content.equals("!avocado wallpaper"))
         {
-            imgurContent.getWallpaper();
+            channel.sendMessage(PULLING_WALLPAPERS).queue();
+            channel.sendMessage(imgurContent.getWallpaper()).queue();
         }
     }
 }

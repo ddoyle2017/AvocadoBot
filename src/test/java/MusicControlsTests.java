@@ -86,7 +86,7 @@ public class MusicControlsTests
      * Instantiating a new MusicControls object is throwing a null pointer exception because there is no Member object tied to the event
      * parameter.
      *
-     * There is no way to programmatically add a member to a guild.
+     * There is no way to programmatically add a member to a guild, according to JDA documentation
      */
     @Test
     public void isUrl_GivenProperUrl_ReturnsTrue()

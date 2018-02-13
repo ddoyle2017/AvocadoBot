@@ -1,3 +1,4 @@
+import ImagePosting.ImageCommandListener;
 import Music.MusicCommandListener;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDABuilder;
@@ -36,6 +37,7 @@ public class AvocadoBot extends ListenerAdapter
 
             api.addEventListener(new GeneralCommandListener());
             api.addEventListener(new MusicCommandListener());
+            api.addEventListener(new ImageCommandListener());
         }
         catch (LoginException | NullPointerException ex)
         {

@@ -23,7 +23,7 @@ Discord is a popular chat & VOIP service for gamers: https://discordapp.com
 ## Built With
 ### [JDA (Java Discord API)](https://github.com/DV8FromTheWorld/JDA)
 
-A clean and full wrapping of the Discord RESTful API and its Websocket-Events for Java.
+A clean and full wrapping of the Discord API for Java. The Discord API is based around two layers, a  HTTPS/REST API for general operations, and a persistent secure websocket-based connection for sending and subscribing to real-time events.
 
 ### [LavaPlayer](https://github.com/sedmelluq/LavaPlayer#lavaplayer---audio-player-library-for-discord)
 

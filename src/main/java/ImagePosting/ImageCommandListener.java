@@ -20,12 +20,11 @@ public class ImageCommandListener extends ListenerAdapter
 
         MessageChannel channel = event.getTextChannel();
         String content = event.getMessage().getContentDisplay();
-        ImgurContent imgurContent;
+        ImgurContentManager imgurContentManager;
 
         try
         {
-            imgurContent = new ImgurContent();
-
+            imgurContentManager = new ImgurContentManager();
         }
         catch (IOException ex)
         {
@@ -36,8 +35,10 @@ public class ImageCommandListener extends ListenerAdapter
 
         if (content.equals("!a wallpaper") || content.equals("!avocado wallpaper"))
         {
+            String wallpaper = imgurContentManager.getWallpaper();
             channel.sendMessage(PULLING_WALLPAPERS).queue();
-            channel.sendMessage(imgurContent.getWallpaper()).queue();
+
+            if (wallpaper != null) channel.sendMessage(wallpaper).queue();
         }
     }
 }

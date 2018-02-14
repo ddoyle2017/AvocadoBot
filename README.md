@@ -11,9 +11,9 @@
 
 ## What is it?
 
-Clean, multi-functional Discord Bot written in Java 8. Features music playing via YouTube, as well as an online image downloading functionality. Hosted on a free tier Amazon EC2 instance.
+A clean, multi-functional Discord Bot written in Java 8. Currently, it features a music streaming via YouTube, and an online image posting feature using Imgur. Hosted on a free tier Amazon EC2 instance.
 
-Discord is a popular chat & VOIP service for gamers: https://discordapp.com
+Discord is a popular chat & VoIP service for gamers: https://discordapp.com
 
 ## Authors
 

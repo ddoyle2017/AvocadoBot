@@ -12,14 +12,12 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.List;
 
 import static Resources.ImgurValues.*;
 
 
 @SuppressWarnings("FieldCanBeLocal")
-class ImgurContent
+class ImgurContentManager
 {
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final Path authFile = new File(".").toPath().resolve("imgur.json");
@@ -28,7 +26,7 @@ class ImgurContent
     private HttpURLConnection connection;
 
 
-    ImgurContent() throws IOException
+    ImgurContentManager() throws IOException
     {
         // Need to find a better way to handle this case
         if (!getImgurAuthenticationInfo())
@@ -37,7 +35,7 @@ class ImgurContent
         }
         else
         {
-            url = new URL(IMGUR_API_URL + SEARCH_IMGUR + "anime");
+            url = new URL(IMGUR_API_URL + "album/A08qZ.json");
             connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
             connection.setDoOutput(true);
@@ -46,43 +44,20 @@ class ImgurContent
         }
     }
 
-    // refactor this to return the image being grabbed
+
     String getWallpaper()
     {
-        StringBuilder builder;
         BufferedReader imgurResponse;
+        ImgurAlbum album;
 
         try
         {
             connection.connect();
-            builder = new StringBuilder();
-            imgurResponse = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-            String line;
-            while ((line = imgurResponse.readLine()) != null)
-            {
-                builder.append(line);
-                System.out.println(line);
-            }
+            imgurResponse = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+            album = gson.fromJson(imgurResponse, ImgurAlbum.class);
             imgurResponse.close();
-            System.out.println(builder.toString());
 
-            /*----------------*/
-            /* code to remove */
-            /*----------------*/
-            String split = builder.toString();
-            split = split.replaceAll("[^A-Za-z0-9 ]", " ");
-            String ID;
-            String baseURL = "http://i.imgur.com/";
-            List<String> items = Arrays.asList(split.split("\\s+"));
-            ID = items.get(items.indexOf("id") + 1);
-            String adrs = baseURL + ID;
-            if (adrs.equalsIgnoreCase(baseURL) || ID == null) {
-                return "No image found";
-            }
-            System.out.println(adrs);
-            System.out.println(url.toString());
-            return adrs;
+            return album.getData().getLink();
         }
         catch (IOException ex)
         {

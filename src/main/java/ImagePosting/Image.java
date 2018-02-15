@@ -2,7 +2,7 @@ package ImagePosting;
 
 import java.util.List;
 
-public class ImgurImage
+public class Image
 {
     private String id;
     private String title;

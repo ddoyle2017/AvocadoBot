@@ -35,10 +35,15 @@ public class ImageCommandListener extends ListenerAdapter
 
         if (content.equals("!a wallpaper") || content.equals("!avocado wallpaper"))
         {
-            String wallpaper = imgurContentManager.getWallpaper();
+            String wallpaper = imgurContentManager.getWallpaperAlbum();
             channel.sendMessage(PULLING_WALLPAPERS).queue();
 
-            if (wallpaper != null) channel.sendMessage(wallpaper).queue();
+            if (wallpaper != null)
+            {
+                channel.sendMessage(wallpaper).queue();
+            }
         }
     }
+
+
 }

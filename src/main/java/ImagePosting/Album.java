@@ -2,7 +2,7 @@ package ImagePosting;
 
 import java.util.List;
 
-public class ImgurAlbum
+public class Album
 {
     private Data data;
     private boolean success;
@@ -45,7 +45,7 @@ public class ImgurAlbum
         private int images_count;
         private boolean in_gallery;
         private boolean is_ad;
-        private List<ImgurImage> images;
+        private List<Image> images;
 
 
         public String getId()
@@ -143,7 +143,7 @@ public class ImgurAlbum
             return is_ad;
         }
 
-        public List<ImgurImage> getImages()
+        public List<Image> getImages()
         {
             return images;
         }

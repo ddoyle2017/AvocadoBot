@@ -29,13 +29,13 @@ class ImgurContentManager
     ImgurContentManager() throws IOException
     {
         // Need to find a better way to handle this case
-        if (!getImgurAuthenticationInfo())
+        if (!getAuthenticationInfo())
         {
             throw new IOException();
         }
         else
         {
-            url = new URL(IMGUR_API_URL + "album/A08qZ.json");
+            url = new URL(IMGUR_API_URL + GRAB_NEWEST_SLASHW_ALBUM + AS_JSON);
             connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
             connection.setDoOutput(true);
@@ -45,19 +45,19 @@ class ImgurContentManager
     }
 
 
-    String getWallpaper()
+    String getWallpaperAlbum()
     {
         BufferedReader imgurResponse;
-        ImgurAlbum album;
+        Gallery gallery;
 
         try
         {
             connection.connect();
             imgurResponse = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
-            album = gson.fromJson(imgurResponse, ImgurAlbum.class);
+            gallery = gson.fromJson(imgurResponse, Gallery.class);
             imgurResponse.close();
 
-            return album.getData().getLink();
+            return gallery.getData().get(0).getLink();
         }
         catch (IOException ex)
         {
@@ -67,7 +67,7 @@ class ImgurContentManager
     }
 
 
-    private boolean getImgurAuthenticationInfo()
+    private boolean getAuthenticationInfo()
     {
         if (!authFile.toFile().exists())
         {
@@ -89,5 +89,11 @@ class ImgurContentManager
             System.err.println(ex.getMessage());
             return false;
         }
+    }
+
+
+    public String findLatestAlbum()
+    {
+        return "";
     }
 }

@@ -22,18 +22,30 @@ class ImgurContentManager
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final Path authFile = new File(".").toPath().resolve("imgur.json");
     private ImgurSecrets secrets;
-    private URL url;
-    private HttpURLConnection connection;
+    private Gallery gallery;
 
 
     ImgurContentManager() throws IOException
     {
-        // Need to find a better way to handle this case
         if (!getAuthenticationInfo())
         {
             throw new IOException();
         }
-        else
+    }
+
+
+    public Gallery getWallpaperGallery()
+    {
+        BufferedReader imgurResponse;
+        URL url;
+        HttpURLConnection connection;
+
+        if (gallery != null)
+        {
+            return gallery;
+        }
+
+        try
         {
             url = new URL(IMGUR_API_URL + GRAB_NEWEST_SLASHW_ALBUM + AS_JSON);
             connection = (HttpURLConnection) url.openConnection();
@@ -41,27 +53,16 @@ class ImgurContentManager
             connection.setDoOutput(true);
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Authorization", "Client-ID " + secrets.getClientID());
-        }
-    }
-
-
-    String getWallpaperAlbum()
-    {
-        BufferedReader imgurResponse;
-        Gallery gallery;
-
-        try
-        {
             connection.connect();
             imgurResponse = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
             gallery = gson.fromJson(imgurResponse, Gallery.class);
             imgurResponse.close();
 
-            return gallery.getData().get(0).getLink();
+            return gallery;
         }
         catch (IOException ex)
         {
-            System.err.println(ex.getMessage());
+            ex.printStackTrace();
             return null;
         }
     }
@@ -71,7 +72,7 @@ class ImgurContentManager
     {
         if (!authFile.toFile().exists())
         {
-            System.err.println("Can't find authentication info");
+            System.err.println(CANT_FIND_AUTH_FILE);
             return false;
         }
 
@@ -86,14 +87,8 @@ class ImgurContentManager
         }
         catch (IOException ex)
         {
-            System.err.println(ex.getMessage());
+            ex.printStackTrace();
             return false;
         }
-    }
-
-
-    public String findLatestAlbum()
-    {
-        return "";
     }
 }

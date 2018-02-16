@@ -10,4 +10,5 @@ public final class ImgurValues
     public static final String GRAB_ALBUM = "album/";
     public static final String GRAB_NEWEST_SLASHW_ALBUM = "gallery/r/slashw/newest/day/1";
     public static final String AS_JSON = ".json";
+    public static final String CANT_FIND_AUTH_FILE = "Can't find authentication info";
 }

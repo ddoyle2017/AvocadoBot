@@ -8,6 +8,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import java.io.IOException;
 
 import static Resources.BotReply.*;
+import static Resources.ImgurValues.*;
 
 
 public class ImageCommandListener extends ListenerAdapter
@@ -26,7 +27,7 @@ public class ImageCommandListener extends ListenerAdapter
         try
         {
             imgurContentManager = new ImgurContentManager();
-            wallpaperGallery = imgurContentManager.getWallpaperGallery();
+            wallpaperGallery = imgurContentManager.getImgurGallery(IMGUR_API_URL + GRAB_NEWEST_SLASHW_ALBUM + AS_JSON);
         }
         catch (IOException ex)
         {
@@ -35,15 +36,27 @@ public class ImageCommandListener extends ListenerAdapter
             return;
         }
 
-        if (content.equals("!a wallpaper") || content.equals("!avocado wallpaper"))
+        if (content.equals("!avocado wallpaper") || content.equals("!a wallpaper"))
         {
             channel.sendMessage(PULLING_WALLPAPERS).queue();
 
-            if (wallpaperGallery != null && wallpaperGallery.getData() != null)
+            if (wallpaperGallery != null && !wallpaperGallery.getData().isEmpty())
             {
                 channel.sendMessage(wallpaperGallery.getData().get(0).getLink()).queue();
                 channel.sendMessage(wallpaperGallery.getData().get(1).getLink()).queue();
                 channel.sendMessage(wallpaperGallery.getData().get(2).getLink()).queue();
+            }
+        }
+
+        if (content.startsWith("!avocado imgur") || content.startsWith("!a imgur"))
+        {
+            String imageQuery = content.substring(content.lastIndexOf("imgur") + 5, content.length()).trim();
+            channel.sendMessage(":eye_in_speech_bubble: **Searching Imgur for** `" + imageQuery + "`").queue();
+            Gallery searchResults = imgurContentManager.getImgurGallery(IMGUR_API_URL + SEARCH_IMGUR + imageQuery);
+
+            if (searchResults != null && !searchResults.getData().isEmpty())
+            {
+                channel.sendMessage(searchResults.getData().get(0).getLink()).queue();
             }
         }
     }

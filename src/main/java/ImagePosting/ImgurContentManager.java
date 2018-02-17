@@ -22,7 +22,6 @@ class ImgurContentManager
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final Path authFile = new File(".").toPath().resolve("imgur.json");
     private ImgurSecrets secrets;
-    private Gallery gallery;
 
 
     ImgurContentManager() throws IOException
@@ -34,31 +33,27 @@ class ImgurContentManager
     }
 
 
-    public Gallery getWallpaperGallery()
+    public Gallery getImgurGallery(String imgurQuery)
     {
-        BufferedReader imgurResponse;
-        URL url;
         HttpURLConnection connection;
-
-        if (gallery != null)
-        {
-            return gallery;
-        }
+        BufferedReader imgurResponse;
+        Gallery queryResult;
 
         try
         {
-            url = new URL(IMGUR_API_URL + GRAB_NEWEST_SLASHW_ALBUM + AS_JSON);
+            URL url = new URL(imgurQuery);
             connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
             connection.setDoOutput(true);
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Authorization", "Client-ID " + secrets.getClientID());
             connection.connect();
+
             imgurResponse = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
-            gallery = gson.fromJson(imgurResponse, Gallery.class);
+            queryResult = gson.fromJson(imgurResponse, Gallery.class);
             imgurResponse.close();
 
-            return gallery;
+            return queryResult;
         }
         catch (IOException ex)
         {

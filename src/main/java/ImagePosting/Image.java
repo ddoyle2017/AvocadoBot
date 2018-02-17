@@ -14,7 +14,7 @@ public class Image
     private int height;
     private int size;
     private int views;
-    private int bandwidth;
+    private long bandwidth;
     private String vote;
     private boolean favorite;
     private boolean nsfw;
@@ -81,7 +81,7 @@ public class Image
         return views;
     }
 
-    public int getBandwidth()
+    public long getBandwidth()
     {
         return bandwidth;
     }

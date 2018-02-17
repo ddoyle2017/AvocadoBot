@@ -52,11 +52,15 @@ public class ImageCommandListener extends ListenerAdapter
         {
             String imageQuery = content.substring(content.lastIndexOf("imgur") + 5, content.length()).trim();
             channel.sendMessage(":eye_in_speech_bubble: **Searching Imgur for** `" + imageQuery + "`").queue();
-            Gallery searchResults = imgurContentManager.getImgurGallery(IMGUR_API_URL + SEARCH_IMGUR + imageQuery);
+            Gallery searchResults = imgurContentManager.getImgurGallery(IMGUR_API_URL + SEARCH_IMGUR + "'" + imageQuery + "'");
 
             if (searchResults != null && !searchResults.getData().isEmpty())
             {
                 channel.sendMessage(searchResults.getData().get(0).getLink()).queue();
+            }
+            else
+            {
+                channel.sendMessage(NO_IMAGE_FOUND).queue();
             }
         }
     }

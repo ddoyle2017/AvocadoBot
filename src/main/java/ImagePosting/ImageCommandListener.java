@@ -27,7 +27,6 @@ public class ImageCommandListener extends ListenerAdapter
         try
         {
             imgurContentManager = new ImgurContentManager();
-            wallpaperGallery = imgurContentManager.getImgurGallery(IMGUR_API_URL + GRAB_NEWEST_SLASHW_ALBUM + AS_JSON);
         }
         catch (IOException ex)
         {
@@ -39,12 +38,18 @@ public class ImageCommandListener extends ListenerAdapter
         if (content.equals("!avocado wallpaper") || content.equals("!a wallpaper"))
         {
             channel.sendMessage(PULLING_WALLPAPERS).queue();
+            wallpaperGallery = imgurContentManager.getImgurGallery(IMGUR_API_URL + GRAB_NEWEST_SLASHW_ALBUMS + AS_JSON);
+
 
             if (wallpaperGallery != null && !wallpaperGallery.getData().isEmpty())
             {
                 channel.sendMessage(wallpaperGallery.getData().get(0).getLink()).queue();
                 channel.sendMessage(wallpaperGallery.getData().get(1).getLink()).queue();
                 channel.sendMessage(wallpaperGallery.getData().get(2).getLink()).queue();
+            }
+            else
+            {
+                channel.sendMessage(NO_IMAGE_FOUND).queue();
             }
         }
 

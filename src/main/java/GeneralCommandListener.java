@@ -52,9 +52,11 @@ public class GeneralCommandListener extends ListenerAdapter
         embedBuilder.addField("!a stop", "Stops the current song\n", false);
         embedBuilder.addField("!a pause", "Pauses the current song\n", false);
         embedBuilder.addField("!a resume", "Continues playing a paused song\n", false);
+        embedBuilder.addField("!a skip", "Skips to the next song in the queue\n", false);
         embedBuilder.addField("!a join", "AvocadoBot will join your voice channel.\n", false);
         embedBuilder.addField("!a leave", "Disconnects AvocadoBot from your voice channel.\n", false);
-        embedBuilder.addField("!a hook [URL]", "Creates a webhook for updates from the given link.\n", false);
+        embedBuilder.addField("!a wallpaper", "Retrieves the 3 newest posts from the r/slashw gallery.\n", false);
+        embedBuilder.addField("!a imgur [Query]", "Retrieves an Imgur album found with the given query\n", false);
         embedBuilder.addField("!a help", "Provides a list of commands.\n", false);
         embedBuilder.addField("!a whoami", "Information about AvocadoBot.", false);
 

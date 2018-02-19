@@ -22,4 +22,5 @@ public final class BotReply
     // Image pulling related responses
     public static final String CANT_CONNECT_WITH_IMGUR = ":x: **I can't connect with Imgur**";
     public static final String PULLING_WALLPAPERS = ":eye_in_speech_bubble: **Searching** `r/slashw` **for wallpapers**";
+    public static final String NO_IMAGE_FOUND = ":x: **Nothing was found**";
 }

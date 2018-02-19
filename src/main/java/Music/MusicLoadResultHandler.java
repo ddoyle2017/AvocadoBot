@@ -52,17 +52,20 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
         }
     }
 
+
     @Override
     public void loadFailed(FriendlyException ex)
     {
         channel.sendMessage(":x: **Could not play: " + ex.getMessage() + "**").queue();
     }
 
+
     @Override
     public void noMatches()
     {
         channel.sendMessage(BotReply.SONG_NOT_FOUND).queue();
     }
+
 
     // called when a keyphrase for a YouTube search is provided
     @Override
@@ -81,6 +84,7 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
         channel.sendMessage(getTrackInfo(currentTrack, queuePosition)).queue();
     }
 
+
     private MessageEmbed getTrackInfo(AudioTrack track, String queuePosition)
     {
         EmbedBuilder embedBuilder = new EmbedBuilder();
@@ -95,6 +99,7 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
 
         return embedBuilder.build();
     }
+
 
     private String convertMSToTimeStamp(Long duration)
     {

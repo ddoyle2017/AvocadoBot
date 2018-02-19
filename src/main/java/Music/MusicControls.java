@@ -1,6 +1,8 @@
 package Music;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.audio.hooks.ConnectionStatus;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
@@ -9,6 +11,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.managers.AudioManager;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.awt.*;
 
 import static Resources.BotReply.*;
 
@@ -20,6 +23,7 @@ public class MusicControls
     private MessageChannel      channel;
     private AudioManager        manager;
     private String              content;
+    private User                author;
     private VoiceChannel        voiceChannel;
     private static boolean      musicPlaying = false;
     private static final String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
@@ -30,10 +34,12 @@ public class MusicControls
         channel = event.getChannel();
         manager = event.getGuild().getAudioManager();
         content = event.getMessage().getContentDisplay();
+        author  = event.getAuthor();
         voiceChannel = event.getMember().getVoiceState().getChannel();
         this.playerManager = playerManager;
         this.musicManager  = musicManager;
     }
+
 
     void playSong(User author)
     {
@@ -51,6 +57,7 @@ public class MusicControls
         }
         playerManager.loadItemOrdered(musicManager, songQuery, new MusicLoadResultHandler(musicManager, channel, author));
     }
+
 
     void stopSong()
     {
@@ -71,6 +78,7 @@ public class MusicControls
         }
     }
 
+
     void skipSong()
     {
         if (!isAudioConnected())
@@ -87,6 +95,7 @@ public class MusicControls
             musicManager.getScheduler().nextTrack();
         }
     }
+
 
     void pauseSong()
     {
@@ -109,6 +118,7 @@ public class MusicControls
         }
     }
 
+
     void resumeSong()
     {
         if (!isAudioConnected())
@@ -126,6 +136,7 @@ public class MusicControls
         }
     }
 
+
     boolean joinVoiceChannel()
     {
         if (!isAudioConnected() && voiceChannel != null)
@@ -141,6 +152,7 @@ public class MusicControls
         }
     }
 
+
     void leaveVoiceChannel()
     {
         if (isAudioConnected())
@@ -154,23 +166,41 @@ public class MusicControls
         }
     }
 
+
+    void nowPlaying()
+    {
+        if (isMusicPlaying())
+        {
+            AudioTrack track = musicManager.getScheduler().getQueue().peek();
+
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+            embedBuilder.setColor(Color.BLUE);
+            embedBuilder.setAuthor("Now Playing", null, author.getAvatarUrl());
+            embedBuilder.setTitle(track.getInfo().title, track.getInfo().uri);
+            channel.sendMessage(embedBuilder.build()).queue();
+        }
+    }
+
+
     boolean isMusicPlaying()
     {
         return musicPlaying;
     }
 
 
-    public boolean isUrl(String songQuery)
+    private boolean isUrl(String songQuery)
     {
         Pattern pattern = Pattern.compile(URL_REGEX);
         Matcher matcher = pattern.matcher(songQuery);
         return matcher.find();
     }
 
+
     private String buildYouTubeQuery(String keyphrase)
     {
         return ("ytsearch:" + keyphrase);
     }
+
 
     private boolean isAudioConnected()
     {

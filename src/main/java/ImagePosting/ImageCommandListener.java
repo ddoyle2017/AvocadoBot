@@ -13,6 +13,7 @@ import static Resources.ImgurValues.*;
 
 public class ImageCommandListener extends ListenerAdapter
 {
+
     @Override
     public void onMessageReceived(MessageReceivedEvent event)
     {
@@ -24,22 +25,18 @@ public class ImageCommandListener extends ListenerAdapter
         ImgurContentManager imgurContentManager;
         Gallery wallpaperGallery;
 
-        try
-        {
-            imgurContentManager = new ImgurContentManager();
-        }
-        catch (IOException ex)
-        {
-            ex.printStackTrace();
-            channel.sendMessage(CANT_CONNECT_WITH_IMGUR).queue();
-            return;
-        }
 
         if (content.equals("!avocado wallpaper") || content.equals("!a wallpaper"))
         {
+            imgurContentManager = connectToImgur();
+            if (imgurContentManager == null)
+            {
+                channel.sendMessage(CANT_CONNECT_WITH_IMGUR).queue();
+                return;
+            }
+
             channel.sendMessage(PULLING_WALLPAPERS).queue();
             wallpaperGallery = imgurContentManager.getImgurGallery(IMGUR_API_URL + GRAB_NEWEST_SLASHW_ALBUMS + AS_JSON);
-
 
             if (wallpaperGallery != null && !wallpaperGallery.getData().isEmpty())
             {
@@ -55,6 +52,13 @@ public class ImageCommandListener extends ListenerAdapter
 
         if (content.startsWith("!avocado imgur") || content.startsWith("!a imgur"))
         {
+            imgurContentManager = connectToImgur();
+            if (imgurContentManager == null)
+            {
+                channel.sendMessage(CANT_CONNECT_WITH_IMGUR).queue();
+                return;
+            }
+
             String imageQuery = content.substring(content.lastIndexOf("imgur") + 5, content.length()).trim();
             channel.sendMessage(":eye_in_speech_bubble: **Searching Imgur for** `" + imageQuery + "`").queue();
             Gallery searchResults = imgurContentManager.getImgurGallery(IMGUR_API_URL + SEARCH_IMGUR + "'" + imageQuery + "'");
@@ -67,6 +71,19 @@ public class ImageCommandListener extends ListenerAdapter
             {
                 channel.sendMessage(NO_IMAGE_FOUND).queue();
             }
+        }
+    }
+
+    private ImgurContentManager connectToImgur()
+    {
+        try
+        {
+            return new ImgurContentManager();
+        }
+        catch (IOException ex)
+        {
+            ex.printStackTrace();
+            return null;
         }
     }
 

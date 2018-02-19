@@ -75,5 +75,9 @@ public class MusicCommandListener extends ListenerAdapter
         {
             musicControls.leaveVoiceChannel();
         }
+        else if (content.equals("!avocado np") || content.equals("!a np"))
+        {
+            musicControls.nowPlaying();
+        }
     }
 }

@@ -177,6 +177,8 @@ public class MusicControls
             embedBuilder.setColor(Color.BLUE);
             embedBuilder.setAuthor("Now Playing ♪", null, author.getAvatarUrl());
             embedBuilder.setTitle(track.getInfo().title, track.getInfo().uri);
+            embedBuilder.addField("Duration", "lol", false);
+            embedBuilder.addField("Requested by", author.getName(), true);
             embedBuilder.setThumbnail("http://img.youtube.com/vi/" + track.getInfo().identifier + "/0.jpg");
 
             channel.sendMessage(embedBuilder.build()).queue();

@@ -15,6 +15,7 @@ import static Resources.BotReply.MISSING_SONG;
  *
  * An event listener for all bot commands relevant to music playing and audio. Calls the necessary
  * functions to execute the given commands.
+ *
  */
 public class MusicCommandListener extends ListenerAdapter
 {
@@ -26,7 +27,7 @@ public class MusicCommandListener extends ListenerAdapter
     public void onMessageReceived(MessageReceivedEvent event)
     {
         if (event.getAuthor().isBot()) return;
-        if (!event.getMessage().isFromType(ChannelType.TEXT)) return;   // we only accept messages from a text channel (no DMs)
+        if (!event.getMessage().isFromType(ChannelType.TEXT)) return;
 
         MessageChannel  channel = event.getChannel();
         MusicControls   musicControls = new MusicControls(event, playerManager, musicManager);

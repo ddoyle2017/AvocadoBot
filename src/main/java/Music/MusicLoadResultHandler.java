@@ -18,12 +18,13 @@ import java.util.List;
  * MusicLoadResultHandler
  *
  * Handles the results of the TrackScheduler's actions on the tracks.
+ *
  */
 @SuppressWarnings("FieldCanBeLocal")
 public class MusicLoadResultHandler implements AudioLoadResultHandler
 {
     private final MessageChannel channel;
-    private final MusicManager   manager;
+    private final MusicManager manager;
     private final User author;
     private final int SECONDS_IN_AN_HOUR = 3600;
     private final int SECONDS_IN_A_MINUTE = 60;
@@ -35,12 +36,12 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
     {
         this.channel = channel;
         this.manager = manager;
-        this.author  = author;
+        this.author = author;
     }
 
-    // called when a URL is provided
+
     @Override
-    public void trackLoaded(AudioTrack track)
+    public void trackLoaded(AudioTrack track)     // called when a URL is provided
     {
         if (manager.getScheduler().getQueue().isEmpty())
         {
@@ -67,9 +68,8 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
     }
 
 
-    // called when a keyphrase for a YouTube search is provided
     @Override
-    public void playlistLoaded(AudioPlaylist playlist)
+    public void playlistLoaded(AudioPlaylist playlist)     // called when a keyphrase for a YouTube search is provided
     {
         List<AudioTrack> tracks = playlist.getTracks();
         AudioTrack currentTrack = playlist.getSelectedTrack();
@@ -115,17 +115,16 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
         {
             minString = (minutes < 10) ? ("0" + minutes) : Long.toString(minutes);
             return (hours + ":" + minString + ":" + secString);
-        }
-        else
+        } else
         {
             minString = Long.toString(minutes);
             return (minString + ":" + secString);
         }
     }
 
-    // from the YouTube API documentation
-    private String getYouTubeVideoThumbnail(String videoID)
+
+    private String getYouTubeVideoThumbnail(String videoID)     // from the YouTube API documentation
     {
-        return "http://img.youtube.com/vi/" + videoID +"/0.jpg";
+        return "http://img.youtube.com/vi/" + videoID + "/0.jpg";
     }
 }

@@ -25,6 +25,7 @@ public class TrackScheduler extends AudioEventAdapter
     private final AudioPlayer player;
     private final BlockingQueue<AudioTrack> queue;
     private int tracksInQueue;
+    private AudioTrack currentTrack;
 
 
     public TrackScheduler(AudioPlayer audioPlayer)
@@ -48,8 +49,8 @@ public class TrackScheduler extends AudioEventAdapter
         return false;
     }
 
-    // force next track to play
-    public boolean nextTrack()
+
+    public boolean nextTrack() // force next track to play
     {
         return player.startTrack(queue.poll(), false);
     }
@@ -64,6 +65,27 @@ public class TrackScheduler extends AudioEventAdapter
         return tracksInQueue;
     }
 
+    public AudioTrack getCurrentTrack()
+    {
+        return currentTrack;
+    }
+
+
+    @Override
+    public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason)
+    {
+        if (endReason.mayStartNext)
+        {
+            nextTrack();
+        }
+        if (tracksInQueue >= 0) tracksInQueue--;
+    }
+
+    @Override
+    public void onTrackStart(AudioPlayer player, AudioTrack track)
+    {
+        currentTrack = track;
+    }
 
     @Override
     public void onPlayerPause(AudioPlayer player)
@@ -75,22 +97,6 @@ public class TrackScheduler extends AudioEventAdapter
     public void onPlayerResume(AudioPlayer player)
     {
 
-    }
-
-    @Override
-    public void onTrackStart(AudioPlayer player, AudioTrack track)
-    {
-
-    }
-
-    @Override
-    public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason)
-    {
-        if (endReason.mayStartNext)
-        {
-            nextTrack();
-        }
-        if (tracksInQueue >= 0) tracksInQueue--;
     }
 
     @Override

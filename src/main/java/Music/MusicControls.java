@@ -29,7 +29,7 @@ public class MusicControls
     private static final String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
 
 
-    public MusicControls(MessageReceivedEvent event, AudioPlayerManager playerManager, MusicManager musicManager)
+    MusicControls(MessageReceivedEvent event, AudioPlayerManager playerManager, MusicManager musicManager)
     {
         channel = event.getChannel();
         manager = event.getGuild().getAudioManager();
@@ -171,12 +171,14 @@ public class MusicControls
     {
         if (isMusicPlaying())
         {
-            AudioTrack track = musicManager.getScheduler().getQueue().peek();
+            AudioTrack track = musicManager.getScheduler().getCurrentTrack();
 
             EmbedBuilder embedBuilder = new EmbedBuilder();
             embedBuilder.setColor(Color.BLUE);
-            embedBuilder.setAuthor("Now Playing", null, author.getAvatarUrl());
+            embedBuilder.setAuthor("Now Playing ♪", null, author.getAvatarUrl());
             embedBuilder.setTitle(track.getInfo().title, track.getInfo().uri);
+            embedBuilder.setThumbnail("http://img.youtube.com/vi/" + track.getInfo().identifier + "/0.jpg");
+
             channel.sendMessage(embedBuilder.build()).queue();
         }
     }

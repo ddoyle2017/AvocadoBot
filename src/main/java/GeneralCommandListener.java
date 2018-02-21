@@ -1,18 +1,18 @@
-import Resources.BotReply;
-
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.awt.*;
+import static Resources.BotReply.*;
+
 
 
 /**
  * GeneralCommandListener Class
  *
- *  - An event listener for AvocadoBot. Handles all "general" commands to the bot that aren't specific to a feature, e.g. providing a command
- *    list or checking to see if a command was properly given.
+ * An event listener for AvocadoBot. Handles all "general" commands to the bot that aren't specific to a feature, e.g. providing a command
+ * list or checking to see if a command was properly given.
  *
  */
 public class GeneralCommandListener extends ListenerAdapter
@@ -31,7 +31,7 @@ public class GeneralCommandListener extends ListenerAdapter
 
         if (content.equals("!avocado") || content.equals("!a"))
         {
-            channel.sendMessage(BotReply.MISSING_COMMAND).queue();
+            channel.sendMessage(MISSING_COMMAND).queue();
         }
         else if (content.equals("!avocado help") || content.equals("!a help") || content.equals("!avocado commands") || content.equals("!a commands"))
         {
@@ -53,6 +53,7 @@ public class GeneralCommandListener extends ListenerAdapter
         embedBuilder.addField("!a pause", "Pauses the current song\n", false);
         embedBuilder.addField("!a resume", "Continues playing a paused song\n", false);
         embedBuilder.addField("!a skip", "Skips to the next song in the queue\n", false);
+        embedBuilder.addField("!a np", "Shows what song is currently playing\n", false);
         embedBuilder.addField("!a join", "AvocadoBot will join your voice channel.\n", false);
         embedBuilder.addField("!a leave", "Disconnects AvocadoBot from your voice channel.\n", false);
         embedBuilder.addField("!a wallpaper", "Retrieves the 3 newest posts from the r/slashw gallery.\n", false);

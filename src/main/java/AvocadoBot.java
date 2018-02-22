@@ -10,8 +10,8 @@ import javax.security.auth.login.LoginException;
 /**
  * AvocadoBot Class
  *
- * - This is where the initialization of the bot takes place. We create an instance of the SettingsManager class, get
- *   the Discord Bot authentication information, then logs into Discord's servers.
+ * This is where the initialization of the bot takes place. We create an instance of the SettingsManager class, get
+ * the Discord Bot authentication information, then logs into Discord's servers.
  */
 public class AvocadoBot extends ListenerAdapter
 {

@@ -13,12 +13,13 @@ import java.util.concurrent.LinkedBlockingQueue;
 /**
  * TrackScheduler Class
  *
- * - The TrackScheduler class acts as the Scheduler for the music track queue (recall Active Object design pattern). This class pairs
- *   together an audio player with a blocking queue, then manages it. The class also implements the AudioEventAdapter interface, which
- *   provides abstract methods for audio Event Listeners.
+ * The TrackScheduler class acts as the Scheduler for the music track queue (recall Active Object design pattern). This class pairs
+ * together an audio player with a blocking queue, then manages it. The class also implements the AudioEventAdapter interface, which
+ * provides abstract methods for audio Event Listeners.
  *
- *   The results of events like pausing a song, resuming it, starting a song, exception handling,and a song stream getting stuck are all
- *   handled here.
+ * The results of events like pausing a song, resuming it, starting a song, exception handling,and a song stream getting stuck are all
+ * handled here.
+ *
  */
 public class TrackScheduler extends AudioEventAdapter
 {
@@ -34,6 +35,7 @@ public class TrackScheduler extends AudioEventAdapter
         this.queue  = new LinkedBlockingQueue<>();
         tracksInQueue = 0;
     }
+
 
     public boolean queue(AudioTrack track)
     {
@@ -55,15 +57,18 @@ public class TrackScheduler extends AudioEventAdapter
         return player.startTrack(queue.poll(), false);
     }
 
+
     public BlockingQueue<AudioTrack> getQueue()
     {
         return queue;
     }
 
+
     public int getTracksInQueue()
     {
         return tracksInQueue;
     }
+
 
     public AudioTrack getCurrentTrack()
     {
@@ -80,6 +85,7 @@ public class TrackScheduler extends AudioEventAdapter
         }
         if (tracksInQueue >= 0) tracksInQueue--;
     }
+
 
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track)

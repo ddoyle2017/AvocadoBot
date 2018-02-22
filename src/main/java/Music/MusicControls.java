@@ -16,7 +16,7 @@ import java.awt.*;
 import static Resources.BotReply.*;
 
 
-public class MusicControls
+public class MusicControls extends AbstractMusicObject
 {
     private AudioPlayerManager  playerManager;
     private MusicManager        musicManager;
@@ -177,9 +177,9 @@ public class MusicControls
             embedBuilder.setColor(Color.BLUE);
             embedBuilder.setAuthor("Now Playing ♪", null, author.getAvatarUrl());
             embedBuilder.setTitle(track.getInfo().title, track.getInfo().uri);
-            embedBuilder.addField("Duration", "lol", false);
+            embedBuilder.addField("Duration", convertMSToTimeStamp(track.getDuration()), false);
             embedBuilder.addField("Requested by", author.getName(), true);
-            embedBuilder.setThumbnail("http://img.youtube.com/vi/" + track.getInfo().identifier + "/0.jpg");
+            embedBuilder.setThumbnail(getYouTubeVideoThumbnail(track.getInfo().identifier));
 
             channel.sendMessage(embedBuilder.build()).queue();
         }

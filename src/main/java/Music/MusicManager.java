@@ -7,8 +7,8 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 /**
  * MusicManager
  *
- * - Overall music manager for a Guild (Discord Server. Encapsulates the LavaPlayer API and JDA API objects into
- *   a single object. Allows for control of the track scheduling, audio player controls, and audio streaming.
+ * Overall music manager for a Guild (Discord Server. Encapsulates the LavaPlayer API and JDA API objects into
+ * a single object. Allows for control of the track scheduling, audio player controls, and audio streaming.
  */
 public class MusicManager
 {

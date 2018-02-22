@@ -21,15 +21,11 @@ import java.util.List;
  *
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class MusicLoadResultHandler implements AudioLoadResultHandler
+public class MusicLoadResultHandler extends AbstractMusicObject implements AudioLoadResultHandler
 {
     private final MessageChannel channel;
     private final MusicManager manager;
     private final User author;
-    private final int SECONDS_IN_AN_HOUR = 3600;
-    private final int SECONDS_IN_A_MINUTE = 60;
-    private final int MINUTES_IN_AN_HOUR = 60;
-    private final int MS_IN_A_SECOND = 1000;
 
 
     MusicLoadResultHandler(MusicManager manager, MessageChannel channel, User author)
@@ -98,33 +94,5 @@ public class MusicLoadResultHandler implements AudioLoadResultHandler
         embedBuilder.setThumbnail(getYouTubeVideoThumbnail(track.getIdentifier()));
 
         return embedBuilder.build();
-    }
-
-
-    private String convertMSToTimeStamp(Long duration)
-    {
-        long durationInSeconds = duration / MS_IN_A_SECOND;
-        long hours = durationInSeconds / SECONDS_IN_AN_HOUR;
-        long minutes = (durationInSeconds / SECONDS_IN_A_MINUTE) % MINUTES_IN_AN_HOUR;
-        long seconds = durationInSeconds % SECONDS_IN_A_MINUTE;
-
-        String minString;
-        String secString = (seconds < 10) ? ("0" + seconds) : Long.toString(seconds);
-
-        if (hours > 0)
-        {
-            minString = (minutes < 10) ? ("0" + minutes) : Long.toString(minutes);
-            return (hours + ":" + minString + ":" + secString);
-        } else
-        {
-            minString = Long.toString(minutes);
-            return (minString + ":" + secString);
-        }
-    }
-
-
-    private String getYouTubeVideoThumbnail(String videoID)     // from the YouTube API documentation
-    {
-        return "http://img.youtube.com/vi/" + videoID + "/0.jpg";
     }
 }

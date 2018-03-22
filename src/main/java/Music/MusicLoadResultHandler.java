@@ -21,7 +21,7 @@ import java.util.List;
  *
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class MusicLoadResultHandler extends AbstractMusicObject implements AudioLoadResultHandler
+public class MusicLoadResultHandler extends MusicObject implements AudioLoadResultHandler
 {
     private final MessageChannel channel;
     private final MusicManager manager;

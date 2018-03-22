@@ -16,7 +16,7 @@ import java.awt.*;
 import static Resources.BotReply.*;
 
 
-public class MusicControls extends AbstractMusicObject
+public class MusicControls extends MusicObject
 {
     private AudioPlayerManager  playerManager;
     private MusicManager        musicManager;

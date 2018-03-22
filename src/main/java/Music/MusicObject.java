@@ -3,7 +3,7 @@ package Music;
 import static Resources.MusicValues.*;
 
 
-abstract class AbstractMusicObject
+abstract class MusicObject
 {
 
     static String convertMSToTimeStamp(Long duration)

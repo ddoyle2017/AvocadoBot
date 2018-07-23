@@ -6,6 +6,12 @@ plugins {
 
 mainClassName = 'AvocadoBot'
 
+jar {
+    manifest {
+        attributes 'Main-Class': 'AvocadoBot'
+    }
+}
+
 version '1.0'
 def jdaVersion = '3.5.0_338'
 

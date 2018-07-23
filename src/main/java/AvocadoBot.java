@@ -18,7 +18,7 @@ public class AvocadoBot extends ListenerAdapter
     private static JDA api;
 
 
-    public static void main (String[] args)
+    public static void main(String[] args)
     {
        if (!System.getProperty("file.encoding").equals("UTF-8")) return;
 

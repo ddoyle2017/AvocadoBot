@@ -20,7 +20,7 @@ import static Resources.BotReply.MISSING_SONG;
 public class MusicCommandListener extends ListenerAdapter
 {
     private AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
-    private MusicManager       musicManager  = new MusicManager(playerManager);
+    private MusicManager musicManager  = new MusicManager(playerManager);
 
 
     @Override
@@ -29,9 +29,9 @@ public class MusicCommandListener extends ListenerAdapter
         if (event.getAuthor().isBot()) return;
         if (!event.getMessage().isFromType(ChannelType.TEXT)) return;
 
-        MessageChannel  channel = event.getChannel();
-        MusicControls   musicControls = new MusicControls(event, playerManager, musicManager);
-        String          content = event.getMessage().getContentDisplay();
+        MessageChannel channel = event.getChannel();
+        MusicControls musicControls = new MusicControls(event, playerManager, musicManager);
+        String content = event.getMessage().getContentDisplay();
 
         event.getGuild().getAudioManager().setSendingHandler(musicManager.getSendHandler());
         AudioSourceManagers.registerRemoteSources(playerManager);

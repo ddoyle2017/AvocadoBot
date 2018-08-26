@@ -13,9 +13,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 /**
  * TrackScheduler Class
  *
- * The TrackScheduler class acts as the Scheduler for the music track queue (recall Active Object design pattern). This class pairs
- * together an audio player with a blocking queue, then manages it. The class also implements the AudioEventAdapter interface, which
- * provides abstract methods for audio Event Listeners.
+ * The TrackScheduler class acts as the scheduler for the music track queue. This class pairs
+ * together an audio player with a blocking queue, then manages it.
  *
  * The results of events like pausing a song, resuming it, starting a song, exception handling,and a song stream getting stuck are all
  * handled here.
@@ -35,7 +34,6 @@ public class TrackScheduler extends AudioEventAdapter
         this.queue  = new LinkedBlockingQueue<>();
         tracksInQueue = 0;
     }
-
 
     public boolean queue(AudioTrack track)
     {
@@ -64,13 +62,13 @@ public class TrackScheduler extends AudioEventAdapter
     }
 
 
-    public int getTracksInQueue()
+    int getTracksInQueue()
     {
         return tracksInQueue;
     }
 
 
-    public AudioTrack getCurrentTrack()
+    AudioTrack getCurrentTrack()
     {
         return currentTrack;
     }
@@ -94,26 +92,14 @@ public class TrackScheduler extends AudioEventAdapter
     }
 
     @Override
-    public void onPlayerPause(AudioPlayer player)
-    {
-
-    }
+    public void onPlayerPause(AudioPlayer player) { }
 
     @Override
-    public void onPlayerResume(AudioPlayer player)
-    {
-
-    }
+    public void onPlayerResume(AudioPlayer player) { }
 
     @Override
-    public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException ex)
-    {
-
-    }
+    public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException ex) { }
 
     @Override
-    public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs)
-    {
-
-    }
+    public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs) { }
 }

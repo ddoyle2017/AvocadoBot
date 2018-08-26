@@ -18,28 +18,27 @@ import static Resources.BotReply.*;
 
 public class MusicControls extends MusicObject
 {
-    private AudioPlayerManager  playerManager;
-    private MusicManager        musicManager;
-    private MessageChannel      channel;
-    private AudioManager        manager;
-    private String              content;
-    private User                author;
-    private VoiceChannel        voiceChannel;
-    private static boolean      musicPlaying = false;
+    private AudioPlayerManager playerManager;
+    private MusicManager musicManager;
+    private MessageChannel channel;
+    private AudioManager manager;
+    private String content;
+    private User author;
+    private VoiceChannel voiceChannel;
+    private static boolean musicPlaying = false;
     private static final String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
 
 
     MusicControls(MessageReceivedEvent event, AudioPlayerManager playerManager, MusicManager musicManager)
     {
-        channel = event.getChannel();
-        manager = event.getGuild().getAudioManager();
-        content = event.getMessage().getContentDisplay();
-        author  = event.getAuthor();
-        voiceChannel = event.getMember().getVoiceState().getChannel();
+        this.channel = event.getChannel();
+        this.manager = event.getGuild().getAudioManager();
+        this.content = event.getMessage().getContentDisplay();
+        this.author  = event.getAuthor();
+        this.voiceChannel = event.getMember().getVoiceState().getChannel();
         this.playerManager = playerManager;
         this.musicManager  = musicManager;
     }
-
 
     void playSong(User author)
     {
@@ -57,7 +56,6 @@ public class MusicControls extends MusicObject
         }
         playerManager.loadItemOrdered(musicManager, songQuery, new MusicLoadResultHandler(musicManager, channel, author));
     }
-
 
     void stopSong()
     {
@@ -78,7 +76,6 @@ public class MusicControls extends MusicObject
         }
     }
 
-
     void skipSong()
     {
         if (!isAudioConnected())
@@ -95,7 +92,6 @@ public class MusicControls extends MusicObject
             musicManager.getScheduler().nextTrack();
         }
     }
-
 
     void pauseSong()
     {
@@ -118,7 +114,6 @@ public class MusicControls extends MusicObject
         }
     }
 
-
     void resumeSong()
     {
         if (!isAudioConnected())
@@ -136,7 +131,6 @@ public class MusicControls extends MusicObject
         }
     }
 
-
     boolean joinVoiceChannel()
     {
         if (!isAudioConnected() && voiceChannel != null)
@@ -152,7 +146,6 @@ public class MusicControls extends MusicObject
         }
     }
 
-
     void leaveVoiceChannel()
     {
         if (isAudioConnected())
@@ -165,7 +158,6 @@ public class MusicControls extends MusicObject
             channel.sendMessage(NOT_IN_VOICE_CHANNEL).queue();
         }
     }
-
 
     void nowPlaying()
     {
@@ -183,14 +175,16 @@ public class MusicControls extends MusicObject
 
             channel.sendMessage(embedBuilder.build()).queue();
         }
+        else
+        {
+            channel.sendMessage(NOT_IN_VOICE_CHANNEL).queue();
+        }
     }
-
 
     boolean isMusicPlaying()
     {
         return musicPlaying;
     }
-
 
     private boolean isUrl(String songQuery)
     {
@@ -199,12 +193,10 @@ public class MusicControls extends MusicObject
         return matcher.find();
     }
 
-
     private String buildYouTubeQuery(String keyphrase)
     {
         return ("ytsearch:" + keyphrase);
     }
-
 
     private boolean isAudioConnected()
     {

@@ -14,8 +14,7 @@ public class MusicManager
 {
     private final AudioPlayer    player;
     private final TrackScheduler scheduler;
-
-
+    
     public MusicManager(AudioPlayerManager manager)
     {
         player = manager.createPlayer();
@@ -23,7 +22,7 @@ public class MusicManager
         player.addListener(scheduler);
     }
 
-    public AudioPlayerSendHandler getSendHandler()
+    AudioPlayerSendHandler getSendHandler()
     {
         return (new AudioPlayerSendHandler(player));
     }
@@ -33,7 +32,7 @@ public class MusicManager
         return player;
     }
 
-    public TrackScheduler getScheduler()
+    TrackScheduler getScheduler()
     {
         return scheduler;
     }

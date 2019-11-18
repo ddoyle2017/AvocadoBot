@@ -5,8 +5,6 @@ import net.dv8tion.jda.core.entities.MessageType;
 
 public final class TestValues
 {
-    private TestValues() {}
-
     public static final String BOT_TOKEN = "testtoken";
     public static final String TRACK_TITLE = "title";
     public static final String TRACK_AUTHOR = "author";

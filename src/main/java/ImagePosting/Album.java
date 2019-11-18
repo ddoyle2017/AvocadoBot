@@ -1,30 +1,23 @@
 package ImagePosting;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.List;
 
-
+@Getter
+@Setter
+@NoArgsConstructor
 public class Album
 {
     private Data data;
     private boolean success;
     private int status;
 
-
-    public Data getData()
-    {
-        return data;
-    }
-
-    public boolean isSuccess()
-    {
-        return success;
-    }
-
-    public int getStatus()
-    {
-        return status;
-    }
-
+    @Getter
+    @Setter
+    @NoArgsConstructor
     class Data
     {
         private String id;
@@ -47,106 +40,5 @@ public class Album
         private boolean in_gallery;
         private boolean is_ad;
         private List<Image> images;
-
-
-        public String getId()
-        {
-            return id;
-        }
-
-        public String getTitle()
-        {
-            return title;
-        }
-
-        public String getDescription()
-        {
-            return description;
-        }
-
-        public int getDatetime()
-        {
-            return datetime;
-        }
-
-        public String getCover()
-        {
-            return cover;
-        }
-
-        public int getCoverWidth()
-        {
-            return cover_width;
-        }
-
-        public int getCoverHeight()
-        {
-            return cover_height;
-        }
-
-        public String getAccountUrl()
-        {
-            return account_url;
-        }
-
-        public int getAccountId()
-        {
-            return account_id;
-        }
-
-        public String getPrivacy()
-        {
-            return privacy;
-        }
-
-        public String getLayout()
-        {
-            return layout;
-        }
-
-        public int getViews()
-        {
-            return views;
-        }
-
-        public String getLink()
-        {
-            return link;
-        }
-
-        public boolean isFavorite()
-        {
-            return favorite;
-        }
-
-        public boolean isNSFW()
-        {
-            return nsfw;
-        }
-
-        public String getSection()
-        {
-            return section;
-        }
-
-        public int getImagesCount()
-        {
-            return images_count;
-        }
-
-        public boolean isInGallery()
-        {
-            return in_gallery;
-        }
-
-        public boolean isAd()
-        {
-            return is_ad;
-        }
-
-        public List<Image> getImages()
-        {
-            return images;
-        }
     }
 }

@@ -2,8 +2,6 @@ package Resources;
 
 public final class BotReply
 {
-    private BotReply() {}
-
     // Music related responses
     public static final String MISSING_VOICE_CHANNEL = ":x: **You have to be in a voice channel to use this command.**";
     public static final String MISSING_COMMAND = ":x: **I need a command!**";

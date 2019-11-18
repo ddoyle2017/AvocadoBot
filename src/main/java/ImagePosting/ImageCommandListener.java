@@ -10,82 +10,77 @@ import java.io.IOException;
 import static Resources.BotReply.*;
 import static Resources.ImgurValues.*;
 
-
+/**
+ * Handles all Imgur related commands that the bot receives.
+ */
 public class ImageCommandListener extends ListenerAdapter
 {
-
     @Override
-    public void onMessageReceived(MessageReceivedEvent event)
+    public void onMessageReceived(final MessageReceivedEvent event)
     {
-        if (event.getAuthor().isBot()) return;
-        if (!event.getMessage().isFromType(ChannelType.TEXT)) return;
+        if (!isEventValid(event)) return;
 
-        MessageChannel channel = event.getTextChannel();
-        String content = event.getMessage().getContentDisplay();
-        ImgurContentManager imgurContentManager;
-        Gallery wallpaperGallery;
-
+        final MessageChannel channel = event.getTextChannel();
+        final String content = event.getMessage().getContentDisplay();
 
         if (content.equals("!avocado wallpaper") || content.equals("!a wallpaper"))
         {
-            imgurContentManager = connectToImgur();
-            if (imgurContentManager == null)
+            try
+            {
+                final String searchQuery = content.substring(content.lastIndexOf("wallpaper") + 5).trim();
+                channel.sendMessage(getWallpapers(searchQuery, channel, new ImgurContentManager())).queue();
+            }
+            catch (IOException ex)
             {
                 channel.sendMessage(CANT_CONNECT_WITH_IMGUR).queue();
-                return;
-            }
-
-            channel.sendMessage(PULLING_WALLPAPERS).queue();
-            wallpaperGallery = imgurContentManager.getImgurGallery(IMGUR_API_URL + GRAB_NEWEST_SLASHW_ALBUMS + AS_JSON);
-
-            if (wallpaperGallery != null && !wallpaperGallery.getData().isEmpty())
-            {
-                channel.sendMessage(wallpaperGallery.getData().get(0).getLink()).queue();
-                channel.sendMessage(wallpaperGallery.getData().get(1).getLink()).queue();
-                channel.sendMessage(wallpaperGallery.getData().get(2).getLink()).queue();
-            }
-            else
-            {
-                channel.sendMessage(NO_IMAGE_FOUND).queue();
+                ex.printStackTrace();
             }
         }
-
         if (content.startsWith("!avocado imgur") || content.startsWith("!a imgur"))
         {
-            imgurContentManager = connectToImgur();
-            if (imgurContentManager == null)
+            try
+            {
+                final String searchQuery = content.substring(content.lastIndexOf("imgur") + 5).trim();
+                channel.sendMessage(getImage(searchQuery, channel, new ImgurContentManager())).queue();
+            }
+            catch (IOException ex)
             {
                 channel.sendMessage(CANT_CONNECT_WITH_IMGUR).queue();
-                return;
-            }
-
-            String imageQuery = content.substring(content.lastIndexOf("imgur") + 5, content.length()).trim();
-            channel.sendMessage(":eye_in_speech_bubble: **Searching Imgur for** `" + imageQuery + "`").queue();
-            Gallery searchResults = imgurContentManager.getImgurGallery(IMGUR_API_URL + SEARCH_IMGUR + "'" + imageQuery + "'");
-
-            if (searchResults != null && !searchResults.getData().isEmpty())
-            {
-                channel.sendMessage(searchResults.getData().get(0).getLink()).queue();
-            }
-            else
-            {
-                channel.sendMessage(NO_IMAGE_FOUND).queue();
+                ex.printStackTrace();
             }
         }
     }
 
-    private ImgurContentManager connectToImgur()
+    private String getWallpapers(final String searchQuery, final MessageChannel channel, final ImgurContentManager contentManager)
     {
-        try
-        {
-            return new ImgurContentManager();
-        }
-        catch (IOException ex)
-        {
-            ex.printStackTrace();
-            return null;
-        }
+        return "";
     }
 
+    /**
+     * Retrieves a post from Imgur matching the given search query.
+     * @param searchQuery the query to search Imgur for.
+     * @param channel The text channel that the Bot is posting the results to.
+     * @return The URL of the matching Imgur post, or an error message if nothing is found.
+     */
+    private String getImage(final String searchQuery, final MessageChannel channel, final ImgurContentManager contentManager)
+    {
+        channel.sendMessage(":eye_in_speech_bubble: **Searching Imgur for** `" + searchQuery + "`").queue();
+        Gallery searchResults = contentManager.getImgurGallery(IMGUR_API_URL + SEARCH_IMGUR + "'" + searchQuery + "'");
 
+        if (searchResults != null && !searchResults.getData().isEmpty())
+        {
+            return searchResults.getData().get(0).getLink();
+        }
+        return NO_IMAGE_FOUND;
+    }
+
+    /**
+     * Determines if an MessageReceivedEvent is valid by checking if its null, from a bot, and from a text channel.
+     * @param event A MessageReceivedEvent received by the bot from a channel its listening to.
+     * @return True if the event is valid, false if not.
+     */
+    private boolean isEventValid(final MessageReceivedEvent event)
+    {
+        return (event == null || event.getAuthor().isBot() || !event.getMessage().isFromType(ChannelType.TEXT));
+    }
 }

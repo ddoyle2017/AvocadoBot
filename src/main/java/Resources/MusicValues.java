@@ -2,8 +2,6 @@ package Resources;
 
 public final class MusicValues
 {
-    private MusicValues() {}
-
     public static final String YOUTUBE_API_URL = "http://img.youtube.com/vi/";
     public static final String GET_THUMBNAIL = "/0.jpg";
     public static final int SECONDS_IN_AN_HOUR = 3600;

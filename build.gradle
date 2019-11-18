@@ -27,6 +27,7 @@ dependencies {
     compile "net.dv8tion:JDA:$jdaVersion"
     compile 'com.google.code.gson:gson:2.8.2'
     compile 'com.sedmelluq:lavaplayer:1.2.49'
+    compileOnly 'org.projectlombok:lombok:1.18.10'
 }
 
 compileJava.options.encoding = 'UTF-8'

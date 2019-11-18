@@ -32,7 +32,9 @@ public class SettingsManager
         return instance;
     }
 
-    // constructor
+    /**
+     *
+     */
     private SettingsManager()
     {
         if (!authFile.toFile().exists())
@@ -47,6 +49,10 @@ public class SettingsManager
 
     // Read in authentication info from the JSON file (using GSON) and store info into the
     // appropriate Settings object variables
+
+    /**
+     *
+     */
     private void loadSettings()
     {
         BufferedReader fileInput;

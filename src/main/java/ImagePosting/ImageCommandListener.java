@@ -13,6 +13,7 @@ import static Resources.ImgurValues.*;
 /**
  * Handles all Imgur related commands that the bot receives.
  */
+@SuppressWarnings("WeakerAccess")
 public class ImageCommandListener extends ListenerAdapter
 {
     @Override
@@ -51,7 +52,7 @@ public class ImageCommandListener extends ListenerAdapter
         }
     }
 
-    private String getWallpapers(final String searchQuery, final MessageChannel channel, final ImgurContentManager contentManager)
+    String getWallpapers(final String searchQuery, final MessageChannel channel, final ImgurContentManager contentManager)
     {
         return "";
     }
@@ -62,7 +63,7 @@ public class ImageCommandListener extends ListenerAdapter
      * @param channel The text channel that the Bot is posting the results to.
      * @return The URL of the matching Imgur post, or an error message if nothing is found.
      */
-    private String getImage(final String searchQuery, final MessageChannel channel, final ImgurContentManager contentManager)
+    String getImage(final String searchQuery, final MessageChannel channel, final ImgurContentManager contentManager)
     {
         channel.sendMessage(":eye_in_speech_bubble: **Searching Imgur for** `" + searchQuery + "`").queue();
         Gallery searchResults = contentManager.getImgurGallery(IMGUR_API_URL + SEARCH_IMGUR + "'" + searchQuery + "'");
@@ -79,8 +80,8 @@ public class ImageCommandListener extends ListenerAdapter
      * @param event A MessageReceivedEvent received by the bot from a channel its listening to.
      * @return True if the event is valid, false if not.
      */
-    private boolean isEventValid(final MessageReceivedEvent event)
+    boolean isEventValid(final MessageReceivedEvent event)
     {
-        return (event == null || event.getAuthor().isBot() || !event.getMessage().isFromType(ChannelType.TEXT));
+        return (event != null && !event.getAuthor().isBot() && event.getMessage().isFromType(ChannelType.TEXT));
     }
 }

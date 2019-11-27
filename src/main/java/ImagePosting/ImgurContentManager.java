@@ -1,86 +1,89 @@
 package ImagePosting;
 
+import Utility.FileHelper;
+import Utility.RESTHelper;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
+import java.io.*;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static Resources.ImgurValues.*;
 
 
-@SuppressWarnings("FieldCanBeLocal")
+/**
+ * Represents all interactions to and from the Imgur API.
+ */
 class ImgurContentManager
 {
-    private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private final Path authFile = new File(".").toPath().resolve("imgur.json");
+    private final static String GET_REQUEST = "GET";
+    private final static String PUT_REQUEST = "PUT";
+    private final static String POST_REQUEST = "POST";
+    private final static String DELETE_REQUEST = "DELETE";
+
+    private Gson gson;
+    private RESTHelper restHelper;
     private ImgurSecrets secrets;
 
 
-    ImgurContentManager() throws IOException
+    ImgurContentManager(final Gson gson, final RESTHelper restHelper)
     {
-        if (!getAuthenticationInfo())
-        {
-            throw new IOException();
-        }
+        this.gson = gson;
+        this.restHelper = restHelper;
     }
 
-
-    public Gallery getImgurGallery(String imgurQuery)
+    /**
+     * Connects and sends a request to the Imgur API. Returns a Gallery object with the result.
+     * @param imgurQuery An item to search Imgur for.
+     * @return An object containing an Imgur post matching the search query.
+     */
+    Gallery getImgurGallery(final String imgurQuery)
     {
-        HttpURLConnection connection;
-        BufferedReader imgurResponse;
-        Gallery queryResult;
+        if (imgurQuery == null || imgurQuery.isEmpty()) return null;
 
         try
         {
-            URL url = new URL(imgurQuery);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.setDoOutput(true);
-            connection.setRequestMethod("GET");
-            connection.setRequestProperty("Authorization", "Client-ID " + secrets.getClientID());
-            connection.connect();
+            final Path authFile = new File(".").toPath().resolve("imgur.json");
+            if (!getAuthenticationInfo(authFile, new FileHelper()))
+            {
+                return null;
+            }
 
-            imgurResponse = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
-            queryResult = gson.fromJson(imgurResponse, Gallery.class);
-            imgurResponse.close();
+            final String imgurQueryURL = IMGUR_API_URL + SEARCH_IMGUR + "'" + imgurQuery + "'";
+            final Reader imgurStream = restHelper.getRESTContent(GET_REQUEST, new URL(imgurQueryURL), secrets);
+            final Gallery result = gson.fromJson(imgurStream, Gallery.class);
 
-            return queryResult;
+            imgurStream.close();
+            return result;
         }
-        catch (IOException ex)
+        catch (IOException | NullPointerException ex)
         {
             ex.printStackTrace();
             return null;
         }
     }
 
-
-    private boolean getAuthenticationInfo()
+    /**
+     *
+     * @param authFile
+     * @param fileHelper
+     * @return
+     */
+    boolean getAuthenticationInfo(final Path authFile, final FileHelper fileHelper)
     {
-        if (!authFile.toFile().exists())
-        {
-            System.err.println(CANT_FIND_AUTH_FILE);
-            return false;
-        }
-
-        BufferedReader fileInput;
+        if (fileHelper == null) return false;
 
         try
         {
-            fileInput = Files.newBufferedReader(authFile, StandardCharsets.UTF_8);
-            this.secrets = gson.fromJson(fileInput, ImgurSecrets.class);
-            fileInput.close();
+            final Reader fileStream = fileHelper.getFileContent(authFile);
+            this.secrets = gson.fromJson(fileStream, ImgurSecrets.class);
+            secrets.setRequestKey("Authorization");
+            secrets.setRequestKeyValue("Client-ID " + secrets.getClientID());
+
+            fileStream.close();
             return true;
         }
-        catch (IOException ex)
+        catch (IOException | NullPointerException ex)
         {
             ex.printStackTrace();
             return false;

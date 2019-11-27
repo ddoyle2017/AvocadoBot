@@ -1,5 +1,8 @@
 package ImagePosting;
 
+import Utility.RESTHelper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -23,32 +26,18 @@ public class ImageCommandListener extends ListenerAdapter
 
         final MessageChannel channel = event.getTextChannel();
         final String content = event.getMessage().getContentDisplay();
+        final RESTHelper RESThelper = new RESTHelper();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
         if (content.equals("!avocado wallpaper") || content.equals("!a wallpaper"))
         {
-            try
-            {
-                final String searchQuery = content.substring(content.lastIndexOf("wallpaper") + 5).trim();
-                channel.sendMessage(getWallpapers(searchQuery, channel, new ImgurContentManager())).queue();
-            }
-            catch (IOException ex)
-            {
-                channel.sendMessage(CANT_CONNECT_WITH_IMGUR).queue();
-                ex.printStackTrace();
-            }
+            final String searchQuery = content.substring(content.lastIndexOf("wallpaper") + 5).trim();
+            channel.sendMessage(getWallpapers(searchQuery, channel, new ImgurContentManager(gson, RESThelper))).queue();
         }
         if (content.startsWith("!avocado imgur") || content.startsWith("!a imgur"))
         {
-            try
-            {
-                final String searchQuery = content.substring(content.lastIndexOf("imgur") + 5).trim();
-                channel.sendMessage(getImage(searchQuery, channel, new ImgurContentManager())).queue();
-            }
-            catch (IOException ex)
-            {
-                channel.sendMessage(CANT_CONNECT_WITH_IMGUR).queue();
-                ex.printStackTrace();
-            }
+            final String searchQuery = content.substring(content.lastIndexOf("imgur") + 5).trim();
+            channel.sendMessage(getImage(searchQuery, channel, new ImgurContentManager(gson, RESThelper))).queue();
         }
     }
 
@@ -66,7 +55,7 @@ public class ImageCommandListener extends ListenerAdapter
     String getImage(final String searchQuery, final MessageChannel channel, final ImgurContentManager contentManager)
     {
         channel.sendMessage(":eye_in_speech_bubble: **Searching Imgur for** `" + searchQuery + "`").queue();
-        Gallery searchResults = contentManager.getImgurGallery(IMGUR_API_URL + SEARCH_IMGUR + "'" + searchQuery + "'");
+        Gallery searchResults = contentManager.getImgurGallery(searchQuery);
 
         if (searchResults != null && !searchResults.getData().isEmpty())
         {

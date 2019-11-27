@@ -46,7 +46,7 @@ public class ImageCommandListenerTests
     public void setUp()
     {
         MockitoAnnotations.initMocks(this);
-        imageCommandListener = new ImageCommandListener();
+        this.imageCommandListener = new ImageCommandListener();
     }
 
     @Test

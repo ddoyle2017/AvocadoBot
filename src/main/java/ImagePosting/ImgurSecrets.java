@@ -1,5 +1,6 @@
 package ImagePosting;
 
+import Utility.ISecrets;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,8 +11,10 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-class ImgurSecrets
+class ImgurSecrets implements ISecrets
 {
     private String clientID;
     private String clientSecret;
+    private String requestKey;
+    private String requestKeyValue;
 }

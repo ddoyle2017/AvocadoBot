@@ -18,7 +18,6 @@ Discord is a popular chat & VoIP service for gamers: https://discordapp.com
 ## Authors
 
 * **Daniel Doyle** - [@ddoyle2017](https://github.com/ddoyle2017)
-* **Dieu Do** - [@ddo94](https://github.com/ddo94) 
 
 ## Built With
 ### [JDA (Java Discord API)](https://github.com/DV8FromTheWorld/JDA)

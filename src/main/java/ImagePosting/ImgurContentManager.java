@@ -64,10 +64,10 @@ class ImgurContentManager
     }
 
     /**
-     *
-     * @param authFile
-     * @param fileHelper
-     * @return
+     * Retrieves AvocadoBot's Imgur API secrets and saves them.
+     * @param authFile The file path to where the API secrets are being stored.
+     * @param fileHelper A helper class for reading the file.
+     * @return True, if the contents were found and saved. False, if the operation failed.
      */
     boolean getAuthenticationInfo(final Path authFile, final FileHelper fileHelper)
     {

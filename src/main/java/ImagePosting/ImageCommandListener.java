@@ -8,10 +8,7 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
-import java.io.IOException;
-
-import static Resources.BotReply.*;
-import static Resources.ImgurValues.*;
+import static Resources.BotReply.NO_IMAGE_FOUND;
 
 /**
  * Handles all Imgur related commands that the bot receives.

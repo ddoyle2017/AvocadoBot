@@ -8,6 +8,9 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
+import java.net.URL;
+import java.util.List;
+
 import static Resources.BotReply.NO_IMAGE_FOUND;
 
 /**
@@ -26,21 +29,28 @@ public class ImageCommandListener extends ListenerAdapter
         final RESTHelper RESThelper = new RESTHelper();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-        if (content.equals("!avocado wallpaper") || content.equals("!a wallpaper"))
+        if (content.startsWith("!avocado wallpaper") || content.startsWith("!a wallpaper"))
         {
-            final String searchQuery = content.substring(content.lastIndexOf("wallpaper") + 5).trim();
-            channel.sendMessage(getWallpapers(searchQuery, channel, new ImgurContentManager(gson, RESThelper))).queue();
+//            final String searchQuery = content.substring(content.lastIndexOf("wallpaper") + 5).trim();
+            channel.sendMessage(getWallpapers("2149777", channel, new ImgurContentManager(gson, RESThelper))).queue();
         }
-        if (content.startsWith("!avocado imgur") || content.startsWith("!a imgur"))
+        else if (content.startsWith("!avocado imgur") || content.startsWith("!a imgur"))
         {
             final String searchQuery = content.substring(content.lastIndexOf("imgur") + 5).trim();
             channel.sendMessage(getImage(searchQuery, channel, new ImgurContentManager(gson, RESThelper))).queue();
         }
     }
 
-    String getWallpapers(final String searchQuery, final MessageChannel channel, final ImgurContentManager contentManager)
+    String getWallpapers(final String opID, final MessageChannel channel, final ImgurContentManager contentManager)
     {
-        return "";
+        channel.sendMessage(":eye_in_speech_bubble: Grabbing wallpapers").queue();
+
+        List<URL> wallpapers = contentManager.getWallpapers(opID);
+        if (wallpapers != null && !wallpapers.isEmpty())
+        {
+            return wallpapers.get(0).toString();
+        }
+        return "No Wallpapers Found";
     }
 
     /**

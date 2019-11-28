@@ -52,7 +52,7 @@ public class RESTHelper
      */
     HttpURLConnection openHTTPConnection(final String requestMethod, final URL url, final ISecrets apiSecret)
     {
-        if (!isValidRequestMethod(requestMethod) || url == null || apiSecret == null)
+        if (!isValidRequestMethod(requestMethod) || url == null)
         {
             System.err.println("RESTHelper: Invalid HTTPConnection parameters");
             return null;
@@ -64,7 +64,12 @@ public class RESTHelper
             connection.setDoInput(true);
             connection.setDoOutput(true);
             connection.setRequestMethod(requestMethod);
-            connection.setRequestProperty(apiSecret.getRequestKey(), apiSecret.getRequestKeyValue());
+
+            if (apiSecret != null)
+            {
+                connection.setRequestProperty(apiSecret.getRequestKey(), apiSecret.getRequestKeyValue());
+            }
+
             connection.connect();
             return connection;
         }

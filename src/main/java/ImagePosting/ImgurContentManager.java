@@ -5,8 +5,11 @@ import Utility.RESTHelper;
 import com.google.gson.Gson;
 
 import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 import static Resources.ImgurValues.*;
 
@@ -20,6 +23,9 @@ class ImgurContentManager
     private final static String PUT_REQUEST = "PUT";
     private final static String POST_REQUEST = "POST";
     private final static String DELETE_REQUEST = "DELETE";
+
+    private final static String SLASHW_THREAD_ENDPOINT = "http://boards.4channel.org/w/thread/";
+    private final static String SLASHW_RESPONSE_URL = "http://i.4cdn.org/w/";
 
     private Gson gson;
     private RESTHelper restHelper;
@@ -55,6 +61,41 @@ class ImgurContentManager
 
             imgurStream.close();
             return result;
+        }
+        catch (IOException | NullPointerException ex)
+        {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    List<URL> getWallpapers(final String opID)
+    {
+        if (opID == null || opID.isEmpty()) return null;
+
+        try
+        {
+            final String slashwURL = SLASHW_THREAD_ENDPOINT + opID + AS_JSON;
+            final Reader stream = restHelper.getRESTContent(GET_REQUEST, new URL(slashwURL), null);
+            final Thread thread = gson.fromJson(stream, Thread.class);
+
+            final List<URL> wallpapers = new ArrayList<>();
+            thread.posts.forEach(post ->
+            {
+                if (post.tim != 0)
+                {
+                    try
+                    {
+                        wallpapers.add(new URL(SLASHW_RESPONSE_URL + String.valueOf(post.tim) + ".jpg"));
+                    }
+                    catch (IOException ex)
+                    {
+                        ex.printStackTrace();
+                    }
+                }
+            });
+            stream.close();
+            return wallpapers;
         }
         catch (IOException | NullPointerException ex)
         {

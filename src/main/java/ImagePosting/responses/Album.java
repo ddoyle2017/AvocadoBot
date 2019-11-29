@@ -1,4 +1,4 @@
-package ImagePosting;
+package ImagePosting.responses;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -9,6 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 class Album
 {
@@ -41,5 +42,10 @@ class Album
         private boolean in_gallery;
         private boolean is_ad;
         private List<Image> images;
+    }
+
+    public static class Thread
+    {
+        public List<Post> posts;
     }
 }

@@ -1,5 +1,6 @@
 package ImagePosting;
 
+import ImagePosting.responses.Gallery;
 import Utility.RESTHelper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -31,8 +32,8 @@ public class ImageCommandListener extends ListenerAdapter
 
         if (content.startsWith("!avocado wallpaper") || content.startsWith("!a wallpaper"))
         {
-//            final String searchQuery = content.substring(content.lastIndexOf("wallpaper") + 5).trim();
-            channel.sendMessage(getWallpapers("2149777", channel, new ImgurContentManager(gson, RESThelper))).queue();
+            final String opID = content.substring(content.lastIndexOf("wallpaper") + 9).trim();
+            getWallpapers(opID, channel, new ImgurContentManager(gson, RESThelper));
         }
         else if (content.startsWith("!avocado imgur") || content.startsWith("!a imgur"))
         {
@@ -41,16 +42,22 @@ public class ImageCommandListener extends ListenerAdapter
         }
     }
 
-    String getWallpapers(final String opID, final MessageChannel channel, final ImgurContentManager contentManager)
+    void getWallpapers(final String opID, final MessageChannel channel, final ImgurContentManager contentManager)
     {
-        channel.sendMessage(":eye_in_speech_bubble: Grabbing wallpapers").queue();
+        if (opID == null || opID.isEmpty()) {
+            channel.sendMessage(":X: **Please provide a valid 4Chan thread OP ID**").queue();
+        }
+        channel.sendMessage(":eye_in_speech_bubble: **Grabbing wallpapers from thread OP** `" + opID + "`").queue();
 
         List<URL> wallpapers = contentManager.getWallpapers(opID);
         if (wallpapers != null && !wallpapers.isEmpty())
         {
-            return wallpapers.get(0).toString();
+            wallpapers.forEach(w -> channel.sendMessage(w.toString()).queue());
         }
-        return "No Wallpapers Found";
+        else
+        {
+            channel.sendMessage(":X: **No Wallpapers Found**").queue();
+        }
     }
 
     /**

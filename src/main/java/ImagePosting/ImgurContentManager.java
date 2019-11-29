@@ -1,11 +1,15 @@
 package ImagePosting;
 
+import ImagePosting.requests.AlbumCreation;
+import ImagePosting.requests.ImageUpload;
+import ImagePosting.responses.Album;
+import ImagePosting.responses.Gallery;
+import ImagePosting.responses.Post;
 import Utility.FileHelper;
 import Utility.RESTHelper;
 import com.google.gson.Gson;
 
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -69,6 +73,11 @@ class ImgurContentManager
         }
     }
 
+    /**
+     *
+     * @param opID
+     * @return
+     */
     List<URL> getWallpapers(final String opID)
     {
         if (opID == null || opID.isEmpty()) return null;
@@ -77,16 +86,29 @@ class ImgurContentManager
         {
             final String slashwURL = SLASHW_THREAD_ENDPOINT + opID + AS_JSON;
             final Reader stream = restHelper.getRESTContent(GET_REQUEST, new URL(slashwURL), null);
-            final Thread thread = gson.fromJson(stream, Thread.class);
+            final Album.Thread thread = gson.fromJson(stream, Album.Thread.class);
 
             final List<URL> wallpapers = new ArrayList<>();
+            final List<ImageUpload> uploads = new ArrayList<>();
+
             thread.posts.forEach(post ->
             {
-                if (post.tim != 0)
+                if (post.getTim() != 0L)
                 {
                     try
                     {
-                        wallpapers.add(new URL(SLASHW_RESPONSE_URL + String.valueOf(post.tim) + ".jpg"));
+                        final URL imageURL = new URL(SLASHW_RESPONSE_URL + post.getTim() + post.getExt());
+
+                        final ImageUpload image = ImageUpload.builder()
+                                .name(String.valueOf(post.getTim()))
+                                .title(String.valueOf(post.getTime()))
+                                .type("URL")
+                                .image(imageURL.toString())
+                                .description("Slashw wallpaper")
+                                .build();
+
+                        wallpapers.add(imageURL);
+                        uploads.add(image);
                     }
                     catch (IOException ex)
                     {
@@ -95,9 +117,47 @@ class ImgurContentManager
                 }
             });
             stream.close();
+
+
             return wallpapers;
         }
         catch (IOException | NullPointerException ex)
+        {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     *
+     * @param opPost
+     * @param uploads
+     * @return
+     */
+    URL createWallpaperAlbum(Post opPost, List<ImageUpload> uploads)
+    {
+        if (uploads == null || uploads.isEmpty()) return null;
+
+        try
+        {
+            AlbumCreation wallpaperAlbum = AlbumCreation.builder()
+                    .title(opPost.getSub())
+                    .description(opPost.getCom())
+                    .privacy("hidden")
+                    .build();
+
+            // Create album
+            Reader response = restHelper.getRESTContent("POST", new URL("endpoint"), null);
+
+            // Upload images
+            uploads.forEach(u -> {
+
+            });
+
+            // return the URL to the link of the new album
+            return new URL("");
+        }
+        catch (IOException ex)
         {
             ex.printStackTrace();
             return null;

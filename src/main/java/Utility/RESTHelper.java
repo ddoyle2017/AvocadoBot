@@ -43,6 +43,14 @@ public class RESTHelper
         }
     }
 
+    public Reader postRESTContent(final String requestMethod, final URL url, final ISecrets apiSecret)
+    {
+        HttpURLConnection connection = openHTTPConnection(requestMethod, url, apiSecret);
+        connection.setRequestProperty("Content-Type", "application/json; utf-8");
+        connection.setRequestProperty("Accept", "application/json");
+        return null;
+    }
+
     /**
      * Builds and opens an HTTP connection to the specified API endpoint.
      * @param requestMethod the REST request method to make.

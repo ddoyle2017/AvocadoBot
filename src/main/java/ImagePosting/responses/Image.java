@@ -1,4 +1,4 @@
-package ImagePosting;
+package ImagePosting.responses;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,5 +1,7 @@
 package ImagePosting;
 
+import ImagePosting.responses.Album;
+import ImagePosting.responses.Gallery;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;

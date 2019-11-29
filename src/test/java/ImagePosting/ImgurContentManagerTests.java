@@ -1,5 +1,6 @@
 package ImagePosting;
 
+import ImagePosting.responses.Gallery;
 import Utility.FileHelper;
 import Utility.ISecrets;
 import Utility.RESTHelper;
@@ -10,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.io.Reader;
-import java.lang.reflect.Type;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.UUID;

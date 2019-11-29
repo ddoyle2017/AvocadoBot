@@ -1,4 +1,4 @@
-package ImagePosting;
+package ImagePosting.responses;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +23,7 @@ class Post
     private String county_name;
     private String sub;
     private String com;
-    public int tim;
+    private long tim;
     private String filename;
     private String ext;
     private int fsize;

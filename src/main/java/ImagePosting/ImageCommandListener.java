@@ -42,6 +42,12 @@ public class ImageCommandListener extends ListenerAdapter
         }
     }
 
+    /**
+     * Retrieves an album of wallpapers from Imgur that is pulled from the given 4Chan thread.
+     * @param opID The original post ID of a 4Chan thread
+     * @param channel The text channel the bot is listening to and posting the results to.
+     * @param contentManager 
+     */
     void getWallpapers(final String opID, final MessageChannel channel, final ImgurContentManager contentManager)
     {
         if (opID == null || opID.isEmpty()) {
@@ -49,10 +55,10 @@ public class ImageCommandListener extends ListenerAdapter
         }
         channel.sendMessage(":eye_in_speech_bubble: **Grabbing wallpapers from thread OP** `" + opID + "`").queue();
 
-        List<URL> wallpapers = contentManager.getWallpapers(opID);
-        if (wallpapers != null && !wallpapers.isEmpty())
+        URL albumURL = contentManager.getWallpapers(opID);
+        if (albumURL != null)
         {
-            wallpapers.forEach(w -> channel.sendMessage(w.toString()).queue());
+            channel.sendMessage(albumURL.toString()).queue();
         }
         else
         {
@@ -61,9 +67,10 @@ public class ImageCommandListener extends ListenerAdapter
     }
 
     /**
-     * Retrieves a post from Imgur matching the given search query.
+     * Retrieves a post from Imgur that matches the given search query.
      * @param searchQuery the query to search Imgur for.
      * @param channel The text channel that the Bot is posting the results to.
+     * @param contentManager d
      * @return The URL of the matching Imgur post, or an error message if nothing is found.
      */
     String getImage(final String searchQuery, final MessageChannel channel, final ImgurContentManager contentManager)
@@ -79,7 +86,7 @@ public class ImageCommandListener extends ListenerAdapter
     }
 
     /**
-     * Determines if an MessageReceivedEvent is valid by checking if its null, from a bot, and from a text channel.
+     * Determines if an MessageReceivedEvent is valid.
      * @param event A MessageReceivedEvent received by the bot from a channel its listening to.
      * @return True if the event is valid, false if not.
      */

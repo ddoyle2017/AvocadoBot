@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-class Post
+public class Post
 {
     private int no;
     private int resto;

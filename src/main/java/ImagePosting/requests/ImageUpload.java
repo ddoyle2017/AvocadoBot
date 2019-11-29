@@ -1,19 +1,16 @@
 package ImagePosting.requests;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
-public
-class ImageUpload
+@AllArgsConstructor
+public class ImageUpload
 {
     private String image;
-    private int album;
+    private String album;
     private String type;
     private String name;
     private String title;

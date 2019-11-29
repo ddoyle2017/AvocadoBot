@@ -51,7 +51,7 @@ public class ImgurContentManagerTests
     @Test
     public void getImgurGallery_GivenValidSearchQuery_ReturnsGallery()
     {
-        when(restHelper.getRESTContent(anyString(), any(URL.class), any(ISecrets.class)))
+        when(restHelper.sendRESTRequest(anyString(), any(URL.class), any(ISecrets.class)))
                 .thenReturn(reader);
         when(fileHelper.getFileContent(any()))
                 .thenReturn(reader);

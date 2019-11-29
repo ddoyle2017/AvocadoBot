@@ -1,9 +1,6 @@
 package Utility;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -22,17 +19,19 @@ public class RESTHelper
     public RESTHelper() { }
 
     /**
-     * Retrieves the response from making a REST call.
-     * @param requestMethod the REST request method to make.
-     * @param url The API endpoint to call.
-     * @param apiSecret The API secrets for authorization.
-     * @return A Reader object for streaming the REST call results.
+     * Connects to the given API endpoint and sends a request.
+     * @param requestMethod A type of REST request method.
+     * @param url An API endpoint.
+     * @param jsonBody A JSON payload to send to the API endpoint.
+     * @param apiSecret The API secrets used for authorization.
+     * @return A stream for reading the API's response or NULL if the connection failed.
      */
-    public Reader getRESTContent(final String requestMethod, final URL url, final ISecrets apiSecret)
+    public Reader sendRESTRequest(final String requestMethod, final URL url, String jsonBody, final ISecrets apiSecret)
     {
-        HttpURLConnection connection = openHTTPConnection(requestMethod, url, apiSecret);
+        HttpURLConnection connection = openHTTPConnection(requestMethod, url, jsonBody, apiSecret);
         try
         {
+            connection.connect();
             return new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
         }
         catch (IOException | NullPointerException ex)
@@ -43,43 +42,44 @@ public class RESTHelper
         }
     }
 
-    public Reader postRESTContent(final String requestMethod, final URL url, final ISecrets apiSecret)
-    {
-        HttpURLConnection connection = openHTTPConnection(requestMethod, url, apiSecret);
-        connection.setRequestProperty("Content-Type", "application/json; utf-8");
-        connection.setRequestProperty("Accept", "application/json");
-        return null;
-    }
-
     /**
-     * Builds and opens an HTTP connection to the specified API endpoint.
+     * Builds a HTTP connection to the specified API endpoint.
      * @param requestMethod the REST request method to make.
      * @param url The API endpoint to call.
      * @param apiSecret The API secrets for authorization.
-     * @return A HttpURLConnection object representing the HTTP connection to the API's endpoint.
+     * @return A HttpURLConnection object representing the HTTP connection to the API's endpoint, or NULL if the request is malformed.
      */
-    HttpURLConnection openHTTPConnection(final String requestMethod, final URL url, final ISecrets apiSecret)
+    HttpURLConnection openHTTPConnection(final String requestMethod, final URL url, String jsonBody, final ISecrets apiSecret)
     {
-        if (!isValidRequestMethod(requestMethod) || url == null)
+        if (url == null)
         {
-            System.err.println("RESTHelper: Invalid HTTPConnection parameters");
+            System.err.println("Endpoint URL can NOT be null.");
             return null;
         }
 
         try
         {
-            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-            connection.setDoInput(true);
-            connection.setDoOutput(true);
-            connection.setRequestMethod(requestMethod);
-
-            if (apiSecret != null)
+            if (GET_REQUEST.equalsIgnoreCase(requestMethod))
             {
-                connection.setRequestProperty(apiSecret.getRequestKey(), apiSecret.getRequestKeyValue());
+                return createGETRequest(url, apiSecret);
             }
-
-            connection.connect();
-            return connection;
+            else if (POST_REQUEST.equalsIgnoreCase(requestMethod))
+            {
+                return createPOSTRequest(url, jsonBody, apiSecret);
+            }
+            else if (PUT_REQUEST.equalsIgnoreCase(requestMethod))
+            {
+                return createPUTRequest(url, jsonBody, apiSecret);
+            }
+            else if (DELETE_REQUEST.equalsIgnoreCase(requestMethod))
+            {
+                return createDELETERequest(url, jsonBody, apiSecret);
+            }
+            else
+            {
+                System.err.println("Invalid REST request method.");
+                return null;
+            }
         }
         catch (IOException ex)
         {
@@ -89,13 +89,102 @@ public class RESTHelper
     }
 
     /**
-     * Given a string, determines whether or not its a valid HTTP REST call.
-     * @param requestMethod A string representing a type of REST call.
-     * @return True, if the string is a valid REST call. False, if not.
+     *
+     * @param url
+     * @return
+     * @throws IOException
      */
-    boolean isValidRequestMethod(final String requestMethod)
+    HttpURLConnection createGETRequest(final URL url, final ISecrets apiSecret) throws IOException
     {
-        return (GET_REQUEST.equalsIgnoreCase(requestMethod) || PUT_REQUEST.equalsIgnoreCase(requestMethod) ||
-                POST_REQUEST.equalsIgnoreCase(requestMethod) || DELETE_REQUEST.equalsIgnoreCase(requestMethod));
+        HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+        connection.setDoInput(true);
+        connection.setDoOutput(true);
+        connection.setRequestMethod(GET_REQUEST);
+
+        if (apiSecret != null)
+        {
+            connection.setRequestProperty(apiSecret.getRequestKey(), apiSecret.getRequestKeyValue());
+        }
+        return connection;
+    }
+
+    /**
+     *
+     * @param url
+     * @param jsonBody
+     * @return
+     * @throws IOException
+     */
+    HttpURLConnection createPOSTRequest(final URL url, final String jsonBody, final ISecrets apiSecret) throws IOException
+    {
+        if (jsonBody == null || jsonBody.isEmpty())
+        {
+            System.err.println("A POST request cannot have a null/empty JSON body.");
+            throw new IOException();
+        }
+
+        HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+        connection.setDoInput(true);
+        connection.setDoOutput(true);
+        connection.setRequestMethod(POST_REQUEST);
+        connection.setRequestProperty("Content-Type", "application/json; utf-8");
+        connection.setRequestProperty("Accept", "application/json");
+
+        if (apiSecret != null)
+        {
+            connection.setRequestProperty(apiSecret.getRequestKey(), apiSecret.getRequestKeyValue());
+        }
+
+        final OutputStream outputStream = connection.getOutputStream();
+        final byte[] input = jsonBody.getBytes(StandardCharsets.UTF_8);
+        outputStream.write(input, 0, input.length);
+
+        return connection;
+    }
+
+    //
+    // TO-DO: Not fully implemented yet
+    //
+    HttpURLConnection createPUTRequest(final URL url, final String jsonBody, final ISecrets apiSecret) throws IOException
+    {
+        if (jsonBody == null || jsonBody.isEmpty())
+        {
+            System.err.println("A POST request cannot have a null/empty JSON body.");
+            throw new IOException();
+        }
+
+        HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+        connection.setDoInput(true);
+        connection.setDoOutput(true);
+        connection.setRequestMethod(PUT_REQUEST);
+
+        if (apiSecret != null)
+        {
+            connection.setRequestProperty(apiSecret.getRequestKey(), apiSecret.getRequestKeyValue());
+        }
+        return connection;
+    }
+
+    //
+    // TO-DO: Not fully implemented yet
+    //
+    HttpURLConnection createDELETERequest(final URL url, final String jsonBody, final ISecrets apiSecret) throws IOException
+    {
+        if (jsonBody == null || jsonBody.isEmpty())
+        {
+            System.err.println("A POST request cannot have a null/empty JSON body.");
+            throw new IOException();
+        }
+
+        HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+        connection.setDoInput(true);
+        connection.setDoOutput(true);
+        connection.setRequestMethod(DELETE_REQUEST);
+
+        if (apiSecret != null)
+        {
+            connection.setRequestProperty(apiSecret.getRequestKey(), apiSecret.getRequestKeyValue());
+        }
+        return connection;
     }
 }

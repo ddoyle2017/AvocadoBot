@@ -2,14 +2,14 @@ package ImagePosting;
 
 import ImagePosting.requests.AlbumCreation;
 import ImagePosting.requests.ImageUpload;
-import ImagePosting.responses.Album;
-import ImagePosting.responses.Gallery;
-import ImagePosting.responses.Post;
+import ImagePosting.responses.*;
+import ImagePosting.responses.Thread;
 import Utility.FileHelper;
 import Utility.RESTHelper;
 import com.google.gson.Gson;
 
 import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -60,7 +60,7 @@ class ImgurContentManager
             }
 
             final String imgurQueryURL = IMGUR_API_URL + SEARCH_IMGUR + "'" + imgurQuery + "'";
-            final Reader imgurStream = restHelper.getRESTContent(GET_REQUEST, new URL(imgurQueryURL), secrets);
+            final Reader imgurStream = restHelper.sendRESTRequest(GET_REQUEST, new URL(imgurQueryURL), null, secrets);
             final Gallery result = gson.fromJson(imgurStream, Gallery.class);
 
             imgurStream.close();
@@ -78,20 +78,25 @@ class ImgurContentManager
      * @param opID
      * @return
      */
-    List<URL> getWallpapers(final String opID)
+    URL getWallpapers(final String opID)
     {
         if (opID == null || opID.isEmpty()) return null;
 
         try
         {
-            final String slashwURL = SLASHW_THREAD_ENDPOINT + opID + AS_JSON;
-            final Reader stream = restHelper.getRESTContent(GET_REQUEST, new URL(slashwURL), null);
-            final Album.Thread thread = gson.fromJson(stream, Album.Thread.class);
+            final Path authFile = new File(".").toPath().resolve("imgur.json");
+            if (!getAuthenticationInfo(authFile, new FileHelper()))
+            {
+                return null;
+            }
 
-            final List<URL> wallpapers = new ArrayList<>();
+            final String slashwURL = SLASHW_THREAD_ENDPOINT + opID + AS_JSON;
+            final Reader stream = restHelper.sendRESTRequest(GET_REQUEST, new URL(slashwURL), null, secrets);
+            final Thread thread = gson.fromJson(stream, Thread.class);
+
             final List<ImageUpload> uploads = new ArrayList<>();
 
-            thread.posts.forEach(post ->
+            thread.getPosts().forEach(post ->
             {
                 if (post.getTim() != 0L)
                 {
@@ -101,13 +106,10 @@ class ImgurContentManager
 
                         final ImageUpload image = ImageUpload.builder()
                                 .name(String.valueOf(post.getTim()))
-                                .title(String.valueOf(post.getTime()))
                                 .type("URL")
                                 .image(imageURL.toString())
-                                .description("Slashw wallpaper")
                                 .build();
 
-                        wallpapers.add(imageURL);
                         uploads.add(image);
                     }
                     catch (IOException ex)
@@ -119,7 +121,7 @@ class ImgurContentManager
             stream.close();
 
 
-            return wallpapers;
+            return createWallpaperAlbum(thread.getPosts().get(0), uploads);
         }
         catch (IOException | NullPointerException ex)
         {
@@ -141,21 +143,28 @@ class ImgurContentManager
         try
         {
             AlbumCreation wallpaperAlbum = AlbumCreation.builder()
-                    .title(opPost.getSub())
+                    .title((opPost.getSub() == null || opPost.getSub().isEmpty()) ? opPost.getCom() : opPost.getSub())
                     .description(opPost.getCom())
                     .privacy("hidden")
                     .build();
 
-            // Create album
-            Reader response = restHelper.getRESTContent("POST", new URL("endpoint"), null);
+            Reader stream = restHelper.sendRESTRequest(POST_REQUEST, new URL("https://api.imgur.com/3/album"), gson.toJson(wallpaperAlbum), secrets);
+            AlbumResponse album = gson.fromJson(stream, AlbumResponse.class);
 
-            // Upload images
-            uploads.forEach(u -> {
-
-            });
-
-            // return the URL to the link of the new album
-            return new URL("");
+            if (album == null || !album.isSuccess())
+            {
+                System.err.println("Could not create Imgur album");
+                return null;
+            }
+            if (!uploadImages(new URL("https://api.imgur.com/3/image"), uploads, album.getData().getDeletehash()))
+            {
+                System.err.println("Failed to upload an image. Rolling back Imgur album creation");
+                //
+                // TO-DO: Delete album if an upload fails and retry later.
+                //
+                return null;
+            }
+            return new URL("https://imgur.com/a/" + album.getData().getId());
         }
         catch (IOException ex)
         {
@@ -163,6 +172,21 @@ class ImgurContentManager
             return null;
         }
     }
+
+
+    boolean uploadImages(final URL imgurUploadURL, final List<ImageUpload> uploads, final String albumID) throws IOException
+    {
+        for (ImageUpload u : uploads)
+        {
+            u.setAlbum(albumID);
+            Reader stream = restHelper.sendRESTRequest(POST_REQUEST, imgurUploadURL, gson.toJson(u), secrets);
+            ImageResponse response = gson.fromJson(stream, ImageResponse.class);
+
+            if (!response.isSuccess()) return false;
+        }
+        return true;
+    }
+
 
     /**
      * Retrieves AvocadoBot's Imgur API secrets and saves them.

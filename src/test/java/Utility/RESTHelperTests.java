@@ -15,6 +15,8 @@ import static org.mockito.Mockito.when;
 
 public class RESTHelperTests
 {
+    private final static String TEST_JSON = "{ }";
+
     @Mock
     private URL url;
     @Mock
@@ -37,74 +39,43 @@ public class RESTHelperTests
     {
         when(url.openConnection())
                 .thenReturn(connection);
-        assertNotNull(helper.openHTTPConnection("GET", url, apiSecrets));
+        assertNotNull(helper.openHTTPConnection("GET", url, TEST_JSON, apiSecrets));
     }
 
     @Test
     public void openHTTPConnection_GivenNullISecrets_ReturnsNull()
     {
-        assertNull(helper.openHTTPConnection("GET", url, null));
+        assertNull(helper.openHTTPConnection("GET", url, TEST_JSON,null));
     }
 
     @Test(expected=IOException.class)
     public void openHTTPConnection_GivenBadURL_ThrowsIOException() throws IOException
     {
         URL badURL = new URL(UUID.randomUUID().toString());
-        assertNull(helper.openHTTPConnection("GET", badURL, apiSecrets));
+        assertNull(helper.openHTTPConnection("GET", badURL, TEST_JSON, apiSecrets));
     }
 
     @Test
     public void openHTTPConnection_GivenNullURL_ReturnsNull()
     {
-        assertNull(helper.openHTTPConnection("GET", null, apiSecrets));
+        assertNull(helper.openHTTPConnection("GET", null, TEST_JSON, apiSecrets));
     }
 
     @Test
     public void openHTTPConnection_GivenNullRequestMethod_ReturnsNull()
     {
-        assertNull(helper.openHTTPConnection(null, url, apiSecrets));
+        assertNull(helper.openHTTPConnection(null, url, TEST_JSON, apiSecrets));
     }
 
     @Test
     public void openHTTPConnection_GivenEmptyRequestMethod_ReturnsNull()
     {
-        assertNull(helper.openHTTPConnection("", url, apiSecrets));
+        assertNull(helper.openHTTPConnection("", url, TEST_JSON, apiSecrets));
     }
 
     @Test
     public void openHTTPConnection_GivenInvalidRequestMethod_ReturnsNull()
     {
-        assertNull(helper.openHTTPConnection(UUID.randomUUID().toString(), url, apiSecrets));
-    }
-
-
-    @Test
-    public void isValidRequestMethod_GivenInvalidRequestMethod_ReturnsFalse()
-    {
-        assertFalse(helper.isValidRequestMethod(UUID.randomUUID().toString()));
-    }
-
-    @Test
-    public void isValidRequestMethod_GivenGETRequest_ReturnsTrue()
-    {
-        assertTrue(helper.isValidRequestMethod("GET"));
-    }
-
-    @Test
-    public void isValidRequestMethod_GivenPUTRequest_ReturnsTrue()
-    {
-        assertTrue(helper.isValidRequestMethod("PUT"));
-    }
-
-    @Test
-    public void isValidRequestMethod_GivenPOSTRequest_ReturnsTrue()
-    {
-        assertTrue(helper.isValidRequestMethod("POST"));
-    }
-
-    @Test
-    public void isValidRequestMethod_GivenDELETERequest_ReturnsTrue()
-    {
-        assertTrue(helper.isValidRequestMethod("DELETE"));
+        assertNull(helper.openHTTPConnection(UUID.randomUUID().toString(), url, TEST_JSON, apiSecrets));
     }
 }

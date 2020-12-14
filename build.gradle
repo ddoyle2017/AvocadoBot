@@ -13,7 +13,6 @@ jar {
 }
 
 version '1.0'
-//def jdaVersion = '4.0.0_66'
 def jdaVersion = '3.5.0_338'
 
 sourceCompatibility = 1.8
